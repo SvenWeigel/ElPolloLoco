@@ -41,10 +41,12 @@ class Character extends MovableObject {
 
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){
                 this.moveRight();
+                this.otherDirection = false;
             }
 
             if (this.world.keyboard.LEFT && this.x > 0 ){
                 this.moveLeft();
+                this.otherDirection = true;
             }
             
             if(this.world.keyboard.SPACE && !this.isAboveGround()){
