@@ -15,6 +15,7 @@ class World {
   throwCooldown = 500;
   lastHitTime = 0;
   hitCooldown = 500;
+  backgroundMusic = new Audio("audio/background_music.mp3");
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -23,6 +24,9 @@ class World {
     this.draw();
     this.setWorld();
     this.run();
+    this.backgroundMusic.loop = true;
+    this.backgroundMusic.volume = 0.05;
+    this.backgroundMusic.play();
   }
 
   setWorld() {

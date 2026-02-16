@@ -1,4 +1,7 @@
 class ThrowableObject extends MovableObject {
+
+  throwSound = new Audio("audio/throw_sound.mp3");
+
   IMAGES_ROTATE = [
     "assets/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "assets/img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
@@ -15,9 +18,11 @@ class ThrowableObject extends MovableObject {
     this.x = x;
     this.loadImages(this.IMAGES_ROTATE);
     this.throw();
+    this.throwSound.volume = 0.2;
   }
 
   throw() {
+    this.throwSound.play();
     this.speedY = 30;
     this.applyGravity();
     setInterval(() => {

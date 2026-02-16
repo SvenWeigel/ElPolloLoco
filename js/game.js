@@ -20,6 +20,13 @@ function fullscreen() {
     document.getElementById("canvas").requestFullscreen();
 }
 
+function muteGame() {
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audio => {
+        audio.muted = !audio.muted;
+    });
+}
+
 window.addEventListener("keydown", (e) => {
         if (e.keyCode == 39) {
             keyboard.RIGHT = true;

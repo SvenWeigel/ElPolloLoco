@@ -3,6 +3,10 @@ class Character extends MovableObject {
   width = 120;
   y = 80;
   speed = 10;
+  currentImage = 0;
+  world;
+  walkAudio = new Audio("audio/walking_sound.mp3");
+  jumpAudio = new Audio("audio/jump.mp3");
 
   IMAGES_WALKING = [
     "assets/img/2_character_pepe/2_walk/W-21.png",
@@ -54,11 +58,12 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
-  currentImage = 0;
-  world;
+  
 
   constructor() {
     super().loadImage(this.IMAGES_WALKING[0]);
+    this.walkAudio.volume = 0.2;
+    this.jumpAudio.volume = 0.3;
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DEAD);
@@ -72,16 +77,19 @@ class Character extends MovableObject {
     setInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
+        this.walkAudio.play();
         this.otherDirection = false;
       }
 
       if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
+        this.walkAudio.play();
         this.otherDirection = true;
       }
 
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
+        this.jumpAudio.play();
       }
 
       this.world.camera_x = -this.x + 100;
