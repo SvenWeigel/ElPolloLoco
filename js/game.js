@@ -12,7 +12,12 @@ function init() {
 function hideStartScreen() {
   const startScreen = document.getElementById('start-screen');
   startScreen.classList.add('d-none');
+  document.getElementById('fullscreen-btn').classList.remove('d-none');
   init();
+}
+
+function fullscreen() {
+    document.getElementById("canvas").requestFullscreen();
 }
 
 window.addEventListener("keydown", (e) => {
