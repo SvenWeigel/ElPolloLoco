@@ -4,6 +4,7 @@ let keyboard = new Keyboard();
 
 function init() {
     canvas = document.getElementById("canvas");
+    level();
     world = new World(canvas, keyboard);
 }
 
@@ -11,6 +12,7 @@ function init() {
 function hideStartScreen() {
   const startScreen = document.getElementById('start-screen');
   startScreen.classList.add('d-none');
+  init();
 }
 
 window.addEventListener("keydown", (e) => {

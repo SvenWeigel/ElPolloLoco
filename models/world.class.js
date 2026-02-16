@@ -9,6 +9,10 @@ class World {
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
   throwableObjects = [];
+  lastThrowTime = 0;
+  throwCooldown = 500;  
+  lastHitTime = 0;
+  hitCooldown = 500;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -27,27 +31,43 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowableObjects();
-    }, 200);
+      this.checkThrowableCollisions();
+    }, 50);
   }
 
   checkCollisions() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy)) {
+      if (this.character.isColliding(enemy) && Date.now() - this.lastHitTime > this.hitCooldown) {
         this.character.hit();
         this.statusBar.setPercentage(this.character.energy);
+        this.lastHitTime = Date.now();
       }
     });
+    }
+
+    checkThrowableCollisions() {
+    this.throwableObjects.forEach((bottle, index) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.hit();
+          this.throwableObjects.splice(index, 1);
+        }
+      });
+    });
   }
+  
 
   checkThrowableObjects() {
-    if (this.keyboard.D) {
+    if (this.keyboard.D && Date.now() - this.lastThrowTime > this.throwCooldown) {
       let bottle = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100,
       );
       this.throwableObjects.push(bottle);
+      this.lastThrowTime = Date.now();
     }
   }
+
   draw() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.translate(this.camera_x, 0);

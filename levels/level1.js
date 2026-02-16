@@ -1,4 +1,7 @@
-const level1 = new Level(
+let level1;
+
+function level() {
+level1 = new Level(
     [
         new Chicken(),
         new Chicken(),
@@ -37,3 +40,4 @@ const level1 = new Level(
         new BackgroundObject('assets/img/5_background/layers/1_first_layer/2.png', 720*3, 0)
     ]
 );
+}
