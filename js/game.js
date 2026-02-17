@@ -25,7 +25,7 @@ function hideStartScreen() {
   const startScreen = document.getElementById('start-screen');
   startScreen.classList.add('d-none');
   const headline = document.querySelector('h1');
-  headline.classList.add('d-none');
+  headline.classList.add('hidden');
   document.getElementById('fullscreen-btn').classList.remove('d-none');
   document.getElementById('mute-btn').classList.remove('d-none');
   init();

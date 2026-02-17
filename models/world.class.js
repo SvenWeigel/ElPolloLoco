@@ -14,7 +14,7 @@ class World {
   lastThrowTime = 0;
   throwCooldown = 500;
   lastHitTime = 0;
-  hitCooldown = 500;
+  hitCooldown = 100;
   backgroundMusic = new Audio("audio/background_music.mp3");
   lastBounceTimes = {};
   lastCharacterY = 0; 
