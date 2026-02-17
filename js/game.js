@@ -44,6 +44,13 @@ function muteGame() {
     });
 }
 
+function youWin() {
+    const winScreen = document.getElementById('you-win');
+    if (winScreen) {
+        winScreen.classList.add('d-flex');
+    }
+}
+
 window.addEventListener("keydown", (e) => {
         if (e.keyCode == 39) {
             keyboard.RIGHT = true;

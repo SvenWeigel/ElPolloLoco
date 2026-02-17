@@ -18,6 +18,7 @@ class World {
   backgroundMusic = new Audio("audio/background_music.mp3");
   lastBounceTimes = {};
   lastCharacterY = 0; 
+  hasWon = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -44,8 +45,24 @@ class World {
       this.checkThrowableCollisions();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
+      this.checkWinCondition();
       this.lastCharacterY = this.character.y;
     }, 50);
+  }
+
+  checkWinCondition() {
+    if (this.hasWon) {
+      return;
+    }
+
+    const endbossIsDead = this.level.enemies.some(
+      (enemy) => enemy instanceof Endboss && enemy.isDead(),
+    );
+
+    if (endbossIsDead) {
+      this.hasWon = true;
+      youWin();
+    }
   }
 
   checkCollisions() {

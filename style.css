@@ -38,6 +38,10 @@ h1 {
   display: none !important;
 }
 
+.d-flex {
+  display: flex !important;
+}
+
 #start-screen {
   display: flex;
   flex-direction: column;
@@ -91,6 +95,22 @@ h1 {
   font-size: 24px;
   cursor: pointer;
   z-index: 10;
+}
+
+#you-win {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("assets/img/9_intro_outro_screens/win/win_screen.png");
+  background-position: center;
+  background-size: cover;
+  z-index: 5;
 }
 
 @media only screen and (max-width: 720px) {
