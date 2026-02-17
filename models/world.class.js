@@ -28,7 +28,7 @@ class World {
     this.run();
     this.backgroundMusic.loop = true;
     this.backgroundMusic.volume = 0.05;
-    allAudioElements.push(this.backgroundMusic);
+    registerAudio(this.backgroundMusic);
     this.backgroundMusic.play();
     this.lastCharacterY = this.character.y;
   }
@@ -56,7 +56,7 @@ class World {
           if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300
           ) {
             enemy.hit();
-            this.character.speedY = 25;
+            this.character.speedY = 15;
             this.lastBounceTimes[index] = Date.now();
           }
         } else if (
@@ -76,7 +76,6 @@ class World {
     const enemyTop = enemy.y;
     const stompTolerance = 20;
     const isFalling = this.character.y > this.lastCharacterY;
-
     return (
       isFalling &&
       previousCharacterBottom <= enemyTop + stompTolerance &&
@@ -87,9 +86,15 @@ class World {
   checkThrowableCollisions() {
     this.throwableObjects.forEach((bottle, index) => {
       this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
+        if (bottle.isColliding(enemy) && !bottle.hasHit) {
           enemy.hit();
-          this.throwableObjects.splice(index, 1);
+          bottle.onHit();
+          setTimeout(() => {
+            const bottleIndex = this.throwableObjects.indexOf(bottle);
+            if (bottleIndex !== -1) {
+              this.throwableObjects.splice(bottleIndex, 1);
+            }
+          }, 500);
         }
       });
     });

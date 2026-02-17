@@ -4,6 +4,16 @@ let keyboard = new Keyboard();
 let allAudioElements = [];
 let isMuted = false;
 
+function registerAudio(audio) {
+    if (!audio) {
+        return audio;
+    }
+
+    audio.muted = isMuted;
+    allAudioElements.push(audio);
+    return audio;
+}
+
 function init() {
     canvas = document.getElementById("canvas");
     level();
@@ -28,7 +38,9 @@ function fullscreen() {
 function muteGame() {
     isMuted = !isMuted;
     allAudioElements.forEach(audio => {
-        audio.muted = isMuted;
+        if (audio) {
+            audio.muted = isMuted;
+        }
     });
 }
 

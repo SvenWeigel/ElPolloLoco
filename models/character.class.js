@@ -64,7 +64,8 @@ class Character extends MovableObject {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.walkAudio.volume = 0.2;
     this.jumpAudio.volume = 0.3;
-    allAudioElements.push(this.walkAudio, this.jumpAudio);
+    registerAudio(this.walkAudio);
+    registerAudio(this.jumpAudio);
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DEAD);

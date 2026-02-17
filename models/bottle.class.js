@@ -1,9 +1,22 @@
 class Bottle extends Colectables {
 
-    constructor(x, y) {
-        super(x, y);
-        this.loadImage('assets/img/6_salsa_bottle/salsa_bottle.png');
+    IMAGES_GROUND = [
+        "assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
+        "assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png"
+    ];
+
+    constructor() {
+        super();
+        this.loadImage('assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png');
+        this.loadImages(this.IMAGES_GROUND);
         this.x =  300 + Math.random() * 1000;
-        this.y = 120 + Math.random() * 200;
+        this.y = 350;
+        this.animate();
+    }
+
+    animate() {
+        setInterval(() => {
+            this.playAnimation(this.IMAGES_GROUND);
+        }, 500);
     }
 }
