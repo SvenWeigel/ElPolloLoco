@@ -1,78 +1,111 @@
 @font-face {
-    font-family: 'zabras';
-    src: url('fonts/Zabars.ttf') format('truetype');
+  font-family: "zabras";
+  src: url("fonts/Zabars.ttf") format("truetype");
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'zabras', Arial, Helvetica, sans-serif;
-    background-image: url('assets/img/desert.png');
-    background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "zabras", Arial, Helvetica, sans-serif;
+  background-image: url("assets/img/desert.png");
+  background-position: center;
+  margin: 0;
 }
 
 canvas {
-    background-color: black;
-    display: block;
+  background-color: black;
+  display: block;
 }
 
 #position-canvas {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 120px;
+  position: relative;
+  width: 720px;
 }
 
 h1 {
-    font-size: 64px;
-    margin-bottom: 20px;
+  font-size: 64px;
+  margin-bottom: 20px;
 }
 
 .d-none {
-    display: none !important;; 
+  display: none !important;
 }
 
 #start-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 255px;
-    width: 720px;
-    height: 480px;
-    background-image: url('assets/img/9_intro_outro_screens/start/startscreen_1.png');
-    background-position: center;
-    background-size: 100% 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("assets/img/9_intro_outro_screens/start/startscreen_1.png");
+  background-position: center;
+  background-size: 100% 100%;
+  z-index: 5;
 }
 
 #start-screen button {
-    position: relative;
-    font-size: 18px;
-    top: 35px;
-    height: 25px;
-    width: 120px;
-    background-color: rgb(238, 238, 125);
-    border: none;
-    border-radius: 25px;
-    color: black;
-    cursor: pointer;
+  position: relative;
+  font-size: 18px;
+  top: 35px;
+  height: 25px;
+  width: 120px;
+  background-color: #ffca1a;
+  border: none;
+  border-radius: 25px;
+  color: black;
+  cursor: pointer;
 }
 
 #start-screen button:hover {
-    border-color: #ffff00;
-  box-shadow: 0 0 20px rgba(231, 231, 210, 0.6);
+  border-color: #ffff00;
+  box-shadow: 0 0 20px rgba(255, 212, 13, 0.6);
 }
 
 #fullscreen-btn {
-  position: relative;
-  top: -40px;
-  left: 330px;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
   border: none;
   color: white;
   cursor: pointer;
-  
+  z-index: 10;
+}
+
+#mute-btn {
+  position: absolute;
+  right: 52px;
+  bottom: 12px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+@media only screen and (max-width: 720px) {
+  #position-canvas {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  canvas {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-height: 480px) {
+  canvas {
+    height: 100vh;
+  }
 }

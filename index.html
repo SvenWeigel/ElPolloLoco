@@ -27,13 +27,13 @@
     <script src="js/game.js"></script>
   </head>
   <body>
-    <div id="start-screen" class="start-screen">
-      <button onclick="hideStartScreen()" id="start-btn">Start Game</button>
-    </div>
+    <h1>El Pollo Loco</h1>
     <div id="position-canvas">
-      
-      <h1>El Pollo Loco</h1>
       <canvas id="canvas" width="720" height="480"> </canvas>
+      <div id="start-screen" class="start-screen">
+        <button onclick="hideStartScreen()" id="start-btn">Start Game</button>
+      </div>
+      <img onclick="muteGame()" id="mute-btn" class="d-none" title="Mute/Unmute" src="assets/icons/mute_btn.svg" alt="mute">
       <img onclick="fullscreen()" src="assets/icons/full-screen.svg" alt="full-screen" id="fullscreen-btn" class="d-none">
     </div>
   </body>

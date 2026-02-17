@@ -8,7 +8,7 @@ class World {
   statusBar = new StatusBar();
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
-  bottleAmount = 0; // Zähler für eingesammelte Flaschen
+  bottleAmount = 0;
   throwableObjects = [];
   colectables = [];
   lastThrowTime = 0;
@@ -16,6 +16,8 @@ class World {
   lastHitTime = 0;
   hitCooldown = 500;
   backgroundMusic = new Audio("audio/background_music.mp3");
+  lastBounceTimes = {};
+  lastCharacterY = 0; 
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -26,7 +28,9 @@ class World {
     this.run();
     this.backgroundMusic.loop = true;
     this.backgroundMusic.volume = 0.05;
+    allAudioElements.push(this.backgroundMusic);
     this.backgroundMusic.play();
+    this.lastCharacterY = this.character.y;
   }
 
   setWorld() {
@@ -40,20 +44,44 @@ class World {
       this.checkThrowableCollisions();
       this.checkCoinCollisions();
       this.checkBottleCollisions();
+      this.lastCharacterY = this.character.y;
     }, 50);
   }
 
   checkCollisions() {
-    this.level.enemies.forEach((enemy) => {
-      if (
-        this.character.isColliding(enemy) &&
-        Date.now() - this.lastHitTime > this.hitCooldown
-      ) {
-        this.character.hit();
-        this.statusBar.setPercentage(this.character.energy);
-        this.lastHitTime = Date.now();
+    this.level.enemies.forEach((enemy, index) => {
+      if (this.character.isColliding(enemy)) {
+        const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
+        if (isOnTop && enemy instanceof Chicken && !enemy.isDead()) {
+          if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300
+          ) {
+            enemy.hit();
+            this.character.speedY = 25;
+            this.lastBounceTimes[index] = Date.now();
+          }
+        } else if (
+          !isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown
+        ) {
+          this.character.hit();
+          this.statusBar.setPercentage(this.character.energy);
+          this.lastHitTime = Date.now();
+        }
       }
     });
+  }
+
+  isCharacterJumpingOnEnemy(enemy) {
+    const previousCharacterBottom = this.lastCharacterY + this.character.height;
+    const currentCharacterBottom = this.character.y + this.character.height;
+    const enemyTop = enemy.y;
+    const stompTolerance = 20;
+    const isFalling = this.character.y > this.lastCharacterY;
+
+    return (
+      isFalling &&
+      previousCharacterBottom <= enemyTop + stompTolerance &&
+      currentCharacterBottom >= enemyTop
+    );
   }
 
   checkThrowableCollisions() {
@@ -113,9 +141,7 @@ class World {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
-
     this.ctx.translate(-this.camera_x, 0);
-    // -------Space for fixed objects like status bar--------
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
     this.addToMap(this.statusBar);
@@ -125,9 +151,7 @@ class World {
     this.addObjectsToMap(this.level.colectables);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.clouds);
-
     this.ctx.translate(-this.camera_x, 0);
-
     requestAnimationFrame(() => this.draw());
   }
 

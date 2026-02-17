@@ -1,6 +1,8 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let allAudioElements = [];
+let isMuted = false;
 
 function init() {
     canvas = document.getElementById("canvas");
@@ -12,7 +14,10 @@ function init() {
 function hideStartScreen() {
   const startScreen = document.getElementById('start-screen');
   startScreen.classList.add('d-none');
+  const headline = document.querySelector('h1');
+  headline.classList.add('d-none');
   document.getElementById('fullscreen-btn').classList.remove('d-none');
+  document.getElementById('mute-btn').classList.remove('d-none');
   init();
 }
 
@@ -21,9 +26,9 @@ function fullscreen() {
 }
 
 function muteGame() {
-    const audioElements = document.querySelectorAll('audio');
-    audioElements.forEach(audio => {
-        audio.muted = !audio.muted;
+    isMuted = !isMuted;
+    allAudioElements.forEach(audio => {
+        audio.muted = isMuted;
     });
 }
 
