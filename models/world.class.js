@@ -19,6 +19,7 @@ class World {
   lastBounceTimes = {};
   lastCharacterY = 0; 
   hasWon = false;
+  hasLost = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -46,6 +47,7 @@ class World {
       this.checkCoinCollisions();
       this.checkBottleCollisions();
       this.checkWinCondition();
+      this.checkLooseCondition();
       this.lastCharacterY = this.character.y;
     }, 50);
   }
@@ -54,14 +56,23 @@ class World {
     if (this.hasWon) {
       return;
     }
-
     const endbossIsDead = this.level.enemies.some(
       (enemy) => enemy instanceof Endboss && enemy.isDead(),
     );
-
     if (endbossIsDead) {
       this.hasWon = true;
       youWin();
+    }
+  }
+
+  checkLooseCondition() {
+    if (this.hasWon || this.hasLost) {
+      return;
+    }
+
+    if (this.character.isDead()) {
+      this.hasLost = true;
+      youLose();
     }
   }
 

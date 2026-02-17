@@ -47,7 +47,14 @@ function muteGame() {
 function youWin() {
     const winScreen = document.getElementById('you-win');
     if (winScreen) {
-        winScreen.classList.add('d-flex');
+        winScreen.style.display = 'flex';
+    }
+}
+
+function youLose() {
+    const loseScreen = document.getElementById('game-over');
+    if (loseScreen) {
+        loseScreen.style.display = 'flex';
     }
 }
 
