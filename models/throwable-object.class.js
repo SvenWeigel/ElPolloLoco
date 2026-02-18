@@ -31,6 +31,7 @@ class ThrowableObject extends MovableObject {
     this.throwSound.volume = 0.2;
     this.bottleHitSound.volume = 0.3;
     registerAudio(this.throwSound);
+    registerAudio(this.bottleHitSound);
     this.throw();
   }
 

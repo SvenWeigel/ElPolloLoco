@@ -79,16 +79,15 @@ function youWin() {
   if (winScreen) {
     this.deadBossSound.play();
     this.deadBossSound.volume = 0.3;
-    
+    registerAudio(this.deadBossSound);
     setTimeout(() => {
         clearAllIntervals();
         this.winSound.play();
-        registerAudio(winSound);
+        registerAudio(this.winSound);
         this.winSound.volume = 0.3;
         winScreen.style.display = "flex";
         document.getElementById("restart-btn-div").classList.remove("d-none");
-    }, 2000);
-
+    }, 1000);
   }
 }
 
@@ -102,7 +101,7 @@ function youLose() {
         clearAllIntervals();
         loseScreen.style.display = "flex";
         document.getElementById("restart-btn-div").classList.remove("d-none");
-    }, 2000);
+    }, 1000);
 }
 
 window.addEventListener("keydown", (e) => {
