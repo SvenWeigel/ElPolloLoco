@@ -40,12 +40,22 @@
       <img
         onclick="muteGame()"
         id="mute-btn"
-        class="d-none"
         title="Mute/Unmute"
         src="assets/icons/mute_btn.svg"
         alt="mute"
       />
-      <img src="assets/icons/restart.svg" alt="restart" id="restart-icon" class="d-none" onclick="restartGame()" />
+      <img
+        src="assets/icons/restart.svg"
+        alt="restart"
+        id="restart-icon"
+        onclick="restartGame()"
+      />
+      <img
+        src="assets/icons/disable-mobile-controll.svg"
+        alt="disable mobile control"
+        id="disable-mobile-controll"
+        onclick="toggleMobileControls()"
+      />
       <div id="you-win-loose-screen">
         <img
           src="assets/img/You won, you lost/You Win A.png"
@@ -59,6 +69,36 @@
         />
         <div id="restart-btn-div" class="d-none">
           <button onclick="restartGame()" id="restart-btn">Restart Game</button>
+        </div>
+      </div>
+      <div id="mobile-controll" class="d-none">
+        <div id="left-right">
+          <img
+            src="assets/icons/arrow_left.svg"
+            alt="left"
+            id="left-btn"
+            class="mobile-btn"
+          />
+          <img
+            src="assets/icons/arrow_right.svg"
+            alt="right"
+            id="right-btn"
+            class="mobile-btn"
+          />
+        </div>
+        <div id="jump-throw">
+          <img
+            src="assets/icons/arrow_up.svg"
+            alt="jump"
+            id="jump-btn"
+            class="mobile-btn"
+          />
+          <img
+            src="assets/icons/bottle_throw.svg"
+            alt="throw"
+            id="throw-btn"
+            class="mobile-btn"
+          />
         </div>
       </div>
     </div>

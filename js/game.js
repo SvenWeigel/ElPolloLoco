@@ -7,7 +7,6 @@ let isMuted = false;
 winSound = new Audio("audio/win_sound.mp3");
 deadBossSound = new Audio("audio/dead_boss.mp3");
 
-
 function registerAudio(audio) {
   if (!audio) {
     return audio;
@@ -60,8 +59,6 @@ function hideStartScreen() {
   startScreen.classList.add("d-none");
   const headline = document.querySelector("h1");
   headline.classList.add("hidden");
-  document.getElementById("mute-btn").classList.remove("d-none");
-  document.getElementById("restart-icon").classList.remove("d-none");
   init();
 }
 
@@ -74,6 +71,11 @@ function muteGame() {
   });
 }
 
+function toggleMobileControls() {
+  let mobileControll = document.getElementById("mobile-controll");
+  mobileControll.classList.toggle("d-none");
+}
+
 function youWin() {
   const winScreen = document.getElementById("you-win");
   if (winScreen) {
@@ -81,12 +83,12 @@ function youWin() {
     this.deadBossSound.volume = 0.3;
     registerAudio(this.deadBossSound);
     setTimeout(() => {
-        clearAllIntervals();
-        this.winSound.play();
-        registerAudio(this.winSound);
-        this.winSound.volume = 0.3;
-        winScreen.style.display = "flex";
-        document.getElementById("restart-btn-div").classList.remove("d-none");
+      clearAllIntervals();
+      this.winSound.play();
+      registerAudio(this.winSound);
+      this.winSound.volume = 0.3;
+      winScreen.style.display = "flex";
+      document.getElementById("restart-btn-div").classList.remove("d-none");
     }, 1000);
   }
 }
@@ -98,10 +100,10 @@ function youLose() {
     document.getElementById("restart-btn-div").classList.remove("d-none");
   }
   setTimeout(() => {
-        clearAllIntervals();
-        loseScreen.style.display = "flex";
-        document.getElementById("restart-btn-div").classList.remove("d-none");
-    }, 1000);
+    clearAllIntervals();
+    loseScreen.style.display = "flex";
+    document.getElementById("restart-btn-div").classList.remove("d-none");
+  }, 1000);
 }
 
 window.addEventListener("keydown", (e) => {
@@ -154,4 +156,46 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 68) {
     keyboard.D = false;
   }
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("left-btn").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keyboard.LEFT = true;
+  });
+
+  document.getElementById("left-btn").addEventListener("touchend", (e) => {
+    e.preventDefault();
+    keyboard.LEFT = false;
+  });
+
+  document.getElementById("right-btn").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keyboard.RIGHT = true;
+  });
+
+  document.getElementById("right-btn").addEventListener("touchend", (e) => {
+    e.preventDefault();
+    keyboard.RIGHT = false;
+  });
+
+  document.getElementById("jump-btn").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keyboard.SPACE = true;
+  });
+
+  document.getElementById("jump-btn").addEventListener("touchend", (e) => {
+    e.preventDefault();
+    keyboard.SPACE = false;
+  });
+
+  document.getElementById("throw-btn").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keyboard.D = true;
+  });
+
+  document.getElementById("throw-btn").addEventListener("touchend", (e) => {
+    e.preventDefault();
+    keyboard.D = false;
+  });
 });

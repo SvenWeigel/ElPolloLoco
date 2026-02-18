@@ -96,6 +96,16 @@ h1 {
   z-index: 10;
 }
 
+#disable-mobile-controll {
+  position: absolute;
+  right: 84px;
+  top: 18px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+}
+
 #you-win {
   display: none;
   flex-direction: column;
@@ -170,12 +180,55 @@ h1 {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 6;
+  background-color: #ffca1a;
+  border: none;
+  border-radius: 25px;
+  color: black;
+  cursor: pointer;
+}
+
+#restart-btn:hover {
+  border-color: #ffff00;
+  box-shadow: 0 0 20px rgba(255, 212, 13, 0.6);
+}
+
+#mobile-controll {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 10;
+}
+
+#mobile-controll img {
+  font-size: 18px;
+  height: 40px;
+  width: 40px;
+  background-color: #ffca1a;
+  border: none;
+  border-radius: 25px;
+  color: black;
+  /* cursor: pointer; */
+}
+
+#left-right{
+  display: flex;
+  gap: 30px;
+  margin-left: 40px;
+}
+
+#jump-throw {
+  display: flex;
+  gap: 30px;
+  margin-right: 40px;
 }
 
 @media only screen and (max-width: 1000px) {
   #position-canvas {
     width: 100%;
-    
     margin-top: 0;
   }
 
