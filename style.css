@@ -20,7 +20,13 @@ body {
 }
 
 footer {
-  margin-top: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-size: 18px;
 }
 
 a {
@@ -62,7 +68,7 @@ h2 {
 }
 
 #controls {
-  font-size: 18px;
+  font-size: 32px;
   margin-bottom: 20px;
 }
 
@@ -265,7 +271,7 @@ h2 {
   /* cursor: pointer; */
 }
 
-#left-right{
+#left-right {
   display: flex;
   gap: 30px;
   margin-left: 40px;
@@ -289,7 +295,7 @@ h2 {
   #explain-controls {
     display: none;
   }
-  footer{
+  footer {
     display: none;
   }
 
