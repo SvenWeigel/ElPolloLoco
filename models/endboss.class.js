@@ -7,12 +7,13 @@ class Endboss extends MovableObject {
   startX = 2000;
   attackTriggerX = 1400;
   attackDuration = 2000;
-  attackCooldown = 3000;
+  attackCooldown = 1000;
   isAwake = false;
   isAttackingPhase = false;
   isRetreating = false;
   attackStartedAt = 0;
   nextAttackAt = 0;
+  isMoving = false;
 
   IMAGES_WALKING = [
     "assets/img/4_enemie_boss_chicken/1_walk/G1.png",
@@ -50,7 +51,7 @@ class Endboss extends MovableObject {
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
     this.loadImages(this.IMAGES_WALKING);
-    this.speed = 30;
+    this.speed = 6;
     this.x = this.startX;
     this.nextAttackAt = Date.now() + this.attackCooldown;
     registerAudio(this.hurtSound);
@@ -67,7 +68,14 @@ class Endboss extends MovableObject {
 
   animate() {
     setStoppableInterval(() => {
-      const lastX = this.x;
+      if (this.isDead() || this.isHurt() || !this.isAwake) {
+        this.isMoving = false;
+        return;
+      }
+      this.updateAttackCycle();
+    }, 1000 / 60);
+
+    setStoppableInterval(() => {
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
         this.applyGravity();
@@ -78,14 +86,13 @@ class Endboss extends MovableObject {
       } else if (!this.isAwake) {
         this.playAnimation(this.IMAGES_ALERT);
       } else {
-        this.updateAttackCycle();
-        if (this.x !== lastX) {
+        if (this.isMoving) {
           this.playAnimation(this.IMAGES_WALKING);
         } else {
           this.playAnimation(this.IMAGES_ALERT);
         }
       }
-    }, 100);
+    }, 140);
   }
 
   isDead() {
@@ -97,6 +104,7 @@ class Endboss extends MovableObject {
   }
 
 updateAttackCycle() {
+  this.isMoving = false;
     const now = Date.now();
     if (this.isRetreating) {
         this.handleRetreating(now);
@@ -112,6 +120,7 @@ updateAttackCycle() {
 }
 
 handleRetreating(now) {
+  this.isMoving = true;
     this.moveAwayFromPlayer();
     if (this.x >= this.startX) {
         this.x = this.startX;
@@ -121,6 +130,7 @@ handleRetreating(now) {
 }
 
 handleAttacking(now) {
+  this.isMoving = true;
     this.moveTowardPlayer();
     if (now - this.attackStartedAt >= this.attackDuration) {
         this.isAttackingPhase = false;
@@ -130,6 +140,7 @@ handleAttacking(now) {
 
 handleApproaching() {
     if (this.x > this.attackTriggerX) {
+    this.isMoving = true;
         this.moveTowardPlayer();
     } else {
         this.isAttackingPhase = true;

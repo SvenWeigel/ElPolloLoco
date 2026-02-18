@@ -2,8 +2,10 @@ class Character extends MovableObject {
   height = 280;
   width = 120;
   y = 80;
-  speed = 10;
+  speed = 8;
   currentImage = 0;
+  isMoving = false;
+  gameOverAudioPlayed = false;
   world;
   walkAudio = new Audio("audio/walking_sound.mp3");
   jumpAudio = new Audio("audio/jump.mp3");
@@ -95,25 +97,38 @@ class Character extends MovableObject {
 
     setStoppableInterval(() => {
       this.playCharacterAnimation();
-    }, 1000 / 15 );
+    }, 1000 / 20);
   }
 
   moveCharacter() {
+    let moved = false;
+
     if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
+      this.moveRight();
+      moved = true;
+      this.otherDirection = false;
+    }
+    if (this.world.keyboard.LEFT && this.x > 0) {
+      this.moveLeft();
+      moved = true;
+      this.otherDirection = true;
+    }
+    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+      this.jump();
+      this.jumpAudio.play();
+    }
+
+    this.isMoving = moved;
+    if (moved) {
+      if (this.walkAudio.paused) {
         this.walkAudio.play();
-        this.otherDirection = false;
       }
-      if (this.world.keyboard.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.walkAudio.play();
-        this.otherDirection = true;
-      }
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.jump();
-        this.jumpAudio.play();
-      }
-      this.world.camera_x = -this.x + 100;
+    } else {
+      this.walkAudio.pause();
+      this.walkAudio.currentTime = 0;
+    }
+
+    this.world.camera_x = -this.x + 100;
   }
 
   playCharacterAnimation() {
@@ -125,11 +140,13 @@ class Character extends MovableObject {
         }
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
-        this.hurtAudio.play();
+        if (this.hurtAudio.paused) {
+          this.hurtAudio.play();
+        }
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
-        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+        if (this.isMoving) {
           this.playAnimation(this.IMAGES_WALKING);
         } else {
           this.playAnimation(this.IMAGES_IDLE);

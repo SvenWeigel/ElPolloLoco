@@ -12,7 +12,7 @@ class World {
   throwableObjects = [];
   colectables = [];
   lastThrowTime = 0;
-  throwCooldown = 1500;
+  throwCooldown = 2000;
   lastHitTime = 0;
   hitCooldown = 100;
   backgroundMusic = new Audio("audio/background_music.mp3");
@@ -215,7 +215,7 @@ class World {
       this.flipImage(movableObject);
     }
     movableObject.draw(this.ctx);
-    movableObject.drawFrame(this.ctx);
+    // movableObject.drawFrame(this.ctx);
 
     if (movableObject.otherDirection) {
       this.flipImageBack(movableObject);
