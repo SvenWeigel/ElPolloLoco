@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
-    <link rel="shortcut icon" href="assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
@@ -33,11 +37,28 @@
       <div id="start-screen" class="start-screen">
         <button onclick="hideStartScreen()" id="start-btn">Start Game</button>
       </div>
-      <img onclick="muteGame()" id="mute-btn" class="d-none" title="Mute/Unmute" src="assets/icons/mute_btn.svg" alt="mute">
-      <img onclick="fullscreen()" src="assets/icons/full-screen.svg" alt="full-screen" id="fullscreen-btn" class="d-none">
-      <div id="you-win-screen">
-        <img src="assets/img/You won, you lost/You Win A.png" alt="you win" id="you-win">
-        <img src="assets/img/You won, you lost/Game over A.png" alt="game-over" id="game-over">
+      <img
+        onclick="muteGame()"
+        id="mute-btn"
+        class="d-none"
+        title="Mute/Unmute"
+        src="assets/icons/mute_btn.svg"
+        alt="mute"
+      />
+      <div id="you-win-loose-screen">
+        <img
+          src="assets/img/You won, you lost/You Win A.png"
+          alt="you win"
+          id="you-win"
+        />
+        <img
+          src="assets/img/You won, you lost/Game over A.png"
+          alt="game-over"
+          id="game-over"
+        />
+        <div id="restart-btn-div" class="d-none">
+          <button onclick="restartGame()" id="restart-btn">Restart Game</button>
+        </div>
       </div>
     </div>
   </body>

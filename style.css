@@ -76,23 +76,12 @@ h1 {
   box-shadow: 0 0 20px rgba(255, 212, 13, 0.6);
 }
 
-#fullscreen-btn {
+#mute-btn {
   position: absolute;
   right: 12px;
   bottom: 12px;
   border: none;
   color: white;
-  cursor: pointer;
-  z-index: 10;
-}
-
-#mute-btn {
-  position: absolute;
-  right: 52px;
-  bottom: 12px;
-  border: none;
-  background: none;
-  font-size: 24px;
   cursor: pointer;
   z-index: 10;
 }
@@ -127,6 +116,51 @@ h1 {
   background-position: center;
   background-size: cover;
   z-index: 5;
+}
+
+/* When the parent container is in fullscreen, make overlays cover it fully */
+:fullscreen #you-win,
+:-webkit-full-screen #you-win,
+:-moz-full-screen #you-win,
+:-ms-fullscreen #you-win {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+:fullscreen #game-over,
+:-webkit-full-screen #game-over,
+:-moz-full-screen #game-over,
+:-ms-fullscreen #game-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#restart-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
 }
 
 @media only screen and (max-width: 720px) {
