@@ -172,10 +172,10 @@ h1 {
   z-index: 6;
 }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 1000px) {
   #position-canvas {
     width: 100%;
-    max-width: 720px;
+    
     margin-top: 0;
   }
 
