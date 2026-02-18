@@ -4,6 +4,9 @@ let keyboard = new Keyboard();
 let allAudioElements = [];
 let allIntervalIds = [];
 let isMuted = false;
+winSound = new Audio("audio/win_sound.mp3");
+deadBossSound = new Audio("audio/dead_boss.mp3");
+
 
 function registerAudio(audio) {
   if (!audio) {
@@ -58,6 +61,7 @@ function hideStartScreen() {
   const headline = document.querySelector("h1");
   headline.classList.add("hidden");
   document.getElementById("mute-btn").classList.remove("d-none");
+  document.getElementById("restart-icon").classList.remove("d-none");
   init();
 }
 
@@ -73,8 +77,18 @@ function muteGame() {
 function youWin() {
   const winScreen = document.getElementById("you-win");
   if (winScreen) {
-    winScreen.style.display = "flex";
-    document.getElementById("restart-btn-div").classList.remove("d-none");
+    this.deadBossSound.play();
+    this.deadBossSound.volume = 0.3;
+    
+    setTimeout(() => {
+        clearAllIntervals();
+        this.winSound.play();
+        registerAudio(winSound);
+        this.winSound.volume = 0.3;
+        winScreen.style.display = "flex";
+        document.getElementById("restart-btn-div").classList.remove("d-none");
+    }, 2000);
+
   }
 }
 
@@ -84,6 +98,11 @@ function youLose() {
     loseScreen.style.display = "flex";
     document.getElementById("restart-btn-div").classList.remove("d-none");
   }
+  setTimeout(() => {
+        clearAllIntervals();
+        loseScreen.style.display = "flex";
+        document.getElementById("restart-btn-div").classList.remove("d-none");
+    }, 2000);
 }
 
 window.addEventListener("keydown", (e) => {

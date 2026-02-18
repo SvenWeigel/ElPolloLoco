@@ -7,13 +7,14 @@ class Character extends MovableObject {
   world;
   walkAudio = new Audio("audio/walking_sound.mp3");
   jumpAudio = new Audio("audio/jump.mp3");
+  hurtAudio = new Audio("audio/hurt.mp3");
+  gameOverAudio = new Audio("audio/gameover.mp3");
   
-  // Hitbox-Offset für den Character (passt die Kollisionsbox an die sichtbare Figur an)
   offset = {
-    top: 120,     // Viel Platz über dem Kopf im Sprite
-    left: 20,     // Etwas Platz links
-    right: 30,    // Etwas Platz rechts
-    bottom: 10    // Wenig Platz unten
+    top: 120,
+    left: 20,
+    right: 30,
+    bottom: 10
   };
 
   IMAGES_WALKING = [
@@ -72,8 +73,12 @@ class Character extends MovableObject {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.walkAudio.volume = 0.2;
     this.jumpAudio.volume = 0.3;
+    this.hurtAudio.volume = 0.3;
+    this.gameOverAudio.volume = 0.3;
     registerAudio(this.walkAudio);
     registerAudio(this.jumpAudio);
+    registerAudio(this.hurtAudio);
+    registerAudio(this.gameOverAudio);
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DEAD);
@@ -85,31 +90,42 @@ class Character extends MovableObject {
 
   animate() {
     setStoppableInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveCharacter();
+    }, 1000 / 60);
+
+    setStoppableInterval(() => {
+      this.playCharacterAnimation();
+    }, 1000 / 15 );
+  }
+
+  moveCharacter() {
+    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.walkAudio.play();
         this.otherDirection = false;
       }
-
       if (this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft();
         this.walkAudio.play();
         this.otherDirection = true;
       }
-
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
         this.jumpAudio.play();
       }
-
       this.world.camera_x = -this.x + 100;
-    }, 1000 / 60);
+  }
 
-    setStoppableInterval(() => {
-      if (this.isDead()) {
+  playCharacterAnimation() {
+    if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
+        if (!this.gameOverAudioPlayed) {
+          this.gameOverAudio.play();
+          this.gameOverAudioPlayed = true;
+        }
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
+        this.hurtAudio.play();
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
@@ -119,7 +135,6 @@ class Character extends MovableObject {
           this.playAnimation(this.IMAGES_IDLE);
         }
       }
-    }, 1000 / 15 );
   }
 
   jump() {

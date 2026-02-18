@@ -1,5 +1,6 @@
 class ThrowableObject extends MovableObject {
   hasHit = false;
+  bottleHitSound = new Audio("audio/bottle_hit.mp3");
 
   IMAGES_ROTATE = [
     "assets/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
@@ -28,6 +29,7 @@ class ThrowableObject extends MovableObject {
     this.loadImages(this.IMAGES_ROTATE);
     this.loadImages(this.IMAGES_ON_HIT);
     this.throwSound.volume = 0.2;
+    this.bottleHitSound.volume = 0.3;
     registerAudio(this.throwSound);
     this.throw();
   }
@@ -60,5 +62,6 @@ class ThrowableObject extends MovableObject {
         clearInterval(this.splashInterval);
       }
     }, 80);
+    this.bottleHitSound.play();
   }
 }

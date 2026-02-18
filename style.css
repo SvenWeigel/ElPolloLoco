@@ -79,7 +79,17 @@ h1 {
 #mute-btn {
   position: absolute;
   right: 12px;
-  bottom: 12px;
+  top: 18px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#restart-icon {
+  position: absolute;
+  right:48px;
+  top: 18px;
   border: none;
   color: white;
   cursor: pointer;

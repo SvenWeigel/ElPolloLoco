@@ -12,7 +12,7 @@ class World {
   throwableObjects = [];
   colectables = [];
   lastThrowTime = 0;
-  throwCooldown = 500;
+  throwCooldown = 1500;
   lastHitTime = 0;
   hitCooldown = 100;
   backgroundMusic = new Audio("audio/background_music.mp3");
@@ -41,6 +41,7 @@ class World {
 
   run() {
     setStoppableInterval(() => {
+      this.activateEndbossOnFirstSight();
       this.checkCollisions();
       this.checkThrowableObjects();
       this.checkThrowableCollisions();
@@ -50,6 +51,21 @@ class World {
       this.checkLooseCondition();
       this.lastCharacterY = this.character.y;
     }, 50);
+  }
+
+  activateEndbossOnFirstSight() {
+    const endboss = this.level.enemies.find((enemy) => enemy instanceof Endboss);
+    if (!endboss || endboss.isAwake) {
+      return;
+    }
+
+    const viewportLeft = -this.camera_x - 200;
+    const viewportRight = viewportLeft + this.canvas.width;
+    const bossIsVisible = endboss.x < viewportRight && endboss.x + endboss.width > viewportLeft;
+
+    if (bossIsVisible) {
+      endboss.activate();
+    }
   }
 
   checkWinCondition() {

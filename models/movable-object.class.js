@@ -6,7 +6,6 @@ class MovableObject extends DrawableObject {
   energy = 100;
   lastHit = 0;
   
-  // Hitbox offset: reduziert die Kollisionsbox relativ zur Bildgröße
   offset = {
     top: 0,
     left: 0,
