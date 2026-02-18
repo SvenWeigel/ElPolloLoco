@@ -7,6 +7,14 @@ class Character extends MovableObject {
   world;
   walkAudio = new Audio("audio/walking_sound.mp3");
   jumpAudio = new Audio("audio/jump.mp3");
+  
+  // Hitbox-Offset für den Character (passt die Kollisionsbox an die sichtbare Figur an)
+  offset = {
+    top: 120,     // Viel Platz über dem Kopf im Sprite
+    left: 20,     // Etwas Platz links
+    right: 30,    // Etwas Platz rechts
+    bottom: 10    // Wenig Platz unten
+  };
 
   IMAGES_WALKING = [
     "assets/img/2_character_pepe/2_walk/W-21.png",
@@ -76,7 +84,7 @@ class Character extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.walkAudio.play();
@@ -97,7 +105,7 @@ class Character extends MovableObject {
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
-    setInterval(() => {
+    setStoppableInterval(() => {
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
       } else if (this.isHurt()) {

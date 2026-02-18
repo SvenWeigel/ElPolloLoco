@@ -36,7 +36,7 @@ class ThrowableObject extends MovableObject {
     this.throwSound.play();
     this.speedY = 30;
     this.applyGravity();
-    this.throwInterval = setInterval(() => {
+    this.throwInterval = setStoppableInterval(() => {
       if (this.hasHit) {
         return;
       }
@@ -53,7 +53,7 @@ class ThrowableObject extends MovableObject {
     this.speedY = 0;
     clearInterval(this.throwInterval);
     let splashFrame = 0;
-    this.splashInterval = setInterval(() => {
+    this.splashInterval = setStoppableInterval(() => {
       this.img = this.imageCache[this.IMAGES_ON_HIT[splashFrame]];
       splashFrame++;
       if (splashFrame >= this.IMAGES_ON_HIT.length) {

@@ -7,6 +7,13 @@ class DrawableObject {
   height = 150;
   width = 100;
 
+  offset = {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  };
+
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
@@ -32,7 +39,12 @@ class DrawableObject {
   }
 
   drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject) {
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Endboss ||
+      this instanceof ThrowableObject
+    ) {
       ctx.beginPath();
       ctx.lineWidth = "5";
       ctx.strokeStyle = "blue";

@@ -15,7 +15,7 @@ class Bottle extends Colectables {
     }
 
     animate() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.playAnimation(this.IMAGES_GROUND);
         }, 500);
     }

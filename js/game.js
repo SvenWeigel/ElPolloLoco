@@ -2,16 +2,37 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let allAudioElements = [];
+let allIntervalIds = [];
 let isMuted = false;
 
 function registerAudio(audio) {
   if (!audio) {
     return audio;
   }
-
   audio.muted = isMuted;
   allAudioElements.push(audio);
   return audio;
+}
+
+function setStoppableInterval(fn, time) {
+  let id = setInterval(fn, time);
+  allIntervalIds.push(id);
+  return id;
+}
+
+function clearAllIntervals() {
+  allIntervalIds.forEach((id) => clearInterval(id));
+  allIntervalIds = [];
+}
+
+function stopAllAudio() {
+  allAudioElements.forEach((audio) => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  });
+  allAudioElements = [];
 }
 
 function init() {
@@ -21,9 +42,14 @@ function init() {
 }
 
 function restartGame() {
-  allAudioElements = [];
-  isMuted = false;
-  hideStartScreen();
+  clearAllIntervals();
+  stopAllAudio();
+  document.getElementById("you-win").style.display = "none";
+  document.getElementById("game-over").style.display = "none";
+  document.getElementById("restart-btn-div").classList.add("d-none");
+  keyboard = new Keyboard();
+  level();
+  world = new World(canvas, keyboard);
 }
 
 function hideStartScreen() {
