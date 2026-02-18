@@ -9,6 +9,7 @@ class World {
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
   endbossBar = new EndbossBar();
+  endbossBarVisible = false;
   bottleAmount = 0;
   throwableObjects = [];
   colectables = [];
@@ -64,6 +65,7 @@ class World {
     const bossIsVisible = endboss.x < viewportRight && endboss.x + endboss.width > viewportLeft;
     if (bossIsVisible) {
       endboss.activate();
+      this.endbossBarVisible = true;
     }
   }
 
@@ -201,7 +203,9 @@ class World {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.coinBar);
-    this.addToMap(this.endbossBar);
+    if (this.endbossBarVisible) {
+      this.addToMap(this.endbossBar);
+    }
     this.addToMap(this.bottleBar);
     this.addToMap(this.statusBar);
     this.ctx.translate(this.camera_x, 0);
