@@ -18,6 +18,11 @@ footer {
   margin-top: 20px;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 canvas {
   background-color: black;
   display: block;
