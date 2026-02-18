@@ -3,6 +3,11 @@
   src: url("fonts/Zabars.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "roboto";
+  src: url("fonts/Roboto-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+}
+
 body {
   display: flex;
   flex-direction: column;
