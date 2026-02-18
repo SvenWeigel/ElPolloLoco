@@ -88,7 +88,7 @@ h1 {
 
 #restart-icon {
   position: absolute;
-  right:48px;
+  right: 48px;
   top: 18px;
   border: none;
   color: white;
@@ -128,7 +128,6 @@ h1 {
   z-index: 5;
 }
 
-/* When the parent container is in fullscreen, make overlays cover it fully */
 :fullscreen #you-win,
 :-webkit-full-screen #you-win,
 :-moz-full-screen #you-win,
@@ -177,6 +176,11 @@ h1 {
   #position-canvas {
     width: 100%;
     max-width: 720px;
+    margin-top: 0;
+  }
+
+  h1 {
+    display: none;
   }
 
   canvas {
