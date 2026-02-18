@@ -18,6 +18,12 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
+  /**
+   * Creates a throwable bottle object.
+   *
+   * @param {number} x - Initial x position.
+   * @param {number} y - Initial y position.
+   */
   constructor(x, y) {
     super();
     this.throwSound = new Audio("audio/throw_sound.mp3");
@@ -35,6 +41,9 @@ class ThrowableObject extends MovableObject {
     this.throw();
   }
 
+  /**
+   * Starts throw movement and rotation animation.
+   */
   throw() {
     this.throwSound.play();
     this.speedY = 30;
@@ -48,6 +57,9 @@ class ThrowableObject extends MovableObject {
     }, 1000 / 25);
   }
 
+  /**
+   * Handles the impact animation and sound after a hit.
+   */
   onHit() {
     if (this.hasHit) {
       return;

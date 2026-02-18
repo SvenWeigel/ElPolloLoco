@@ -1,5 +1,10 @@
 let level1;
 
+/**
+ * Builds and assigns the first game level.
+ *
+ * @returns {void}
+ */
 function level() {
   level1 = new Level(
     [

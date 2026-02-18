@@ -23,6 +23,12 @@ class World {
   hasWon = false;
   hasLost = false;
 
+  /**
+   * Creates the world instance and starts rendering/runtime loops.
+   *
+   * @param {HTMLCanvasElement} canvas - Target canvas element.
+   * @param {Keyboard} keyboard - Shared keyboard input state.
+   */
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -37,10 +43,16 @@ class World {
     this.lastCharacterY = this.character.y;
   }
 
+  /**
+   * Attaches world reference to the character.
+   */
   setWorld() {
     this.character.world = this;
   }
 
+  /**
+   * Starts the main game logic interval.
+   */
   run() {
     setStoppableInterval(() => {
       this.activateEndbossOnFirstSight();
@@ -55,6 +67,9 @@ class World {
     }, 50);
   }
 
+  /**
+   * Activates the endboss and shows its bar on first sight.
+   */
   activateEndbossOnFirstSight() {
     const endboss = this.level.enemies.find((enemy) => enemy instanceof Endboss);
     if (!endboss || endboss.isAwake) {
@@ -69,6 +84,9 @@ class World {
     }
   }
 
+  /**
+   * Checks whether win condition is fulfilled.
+   */
   checkWinCondition() {
     if (this.hasWon) {
       return;
@@ -82,6 +100,9 @@ class World {
     }
   }
 
+  /**
+   * Checks whether lose condition is fulfilled.
+   */
   checkLooseCondition() {
     if (this.hasWon || this.hasLost) {
       return;
@@ -93,6 +114,9 @@ class World {
     }
   }
 
+  /**
+   * Checks collisions between character and enemies.
+   */
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
@@ -101,6 +125,12 @@ class World {
     });
   }
 
+  /**
+   * Determines if character is falling onto an enemy.
+   *
+   * @param {MovableObject} enemy - Enemy object.
+   * @returns {boolean} True if stomp conditions are met.
+   */
   isCharacterJumpingOnEnemy(enemy) {
     const previousCharacterBottom = this.lastCharacterY + this.character.height;
     const currentCharacterBottom = this.character.y + this.character.height;
@@ -114,6 +144,9 @@ class World {
     );
   }
 
+  /**
+   * Checks collisions between throwable bottles and enemies.
+   */
   checkThrowableCollisions() {
     this.throwableObjects.forEach((bottle) => {
       this.level.enemies.forEach((enemy) => {
@@ -122,6 +155,9 @@ class World {
     });
   }
 
+  /**
+   * Spawns throwable bottles based on input and cooldown.
+   */
   checkThrowableObjects() {
     if (
       this.keyboard.D &&
@@ -139,6 +175,9 @@ class World {
     }
   }
 
+  /**
+   * Checks coin pickup collisions.
+   */
   checkCoinCollisions() {
     this.level.colectables.forEach((colectable, index) => {
       if (
@@ -151,6 +190,9 @@ class World {
     });
   }
 
+  /**
+   * Checks bottle pickup collisions.
+   */
   checkBottleCollisions() {
     this.level.colectables.forEach((colectable, index) => {
       if (
@@ -164,6 +206,11 @@ class World {
     });
   }
 
+  /**
+   * Updates endboss status bar from enemy health.
+   *
+   * @param {MovableObject} enemy - Hit enemy instance.
+   */
   updateEndbossBar(enemy) {
     if (!(enemy instanceof Endboss)) {
       return;
@@ -172,6 +219,12 @@ class World {
     this.endbossBar.setPercentage(percentage);
   }
 
+  /**
+   * Handles character collision with one enemy.
+   *
+   * @param {MovableObject} enemy - Colliding enemy.
+   * @param {number} index - Enemy index in array.
+   */
   processEnemyCollision(enemy, index) {
     const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
     if (isOnTop && (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
@@ -181,6 +234,12 @@ class World {
     }
   }
 
+  /**
+   * Applies stomp behavior to an enemy.
+   *
+   * @param {MovableObject} enemy - Stomped enemy.
+   * @param {number} index - Enemy index in array.
+   */
   handleStomp(enemy, index) {
     if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300) {
       enemy.hit();
@@ -190,12 +249,21 @@ class World {
     }
   }
 
+  /**
+   * Applies damage to the character and updates health bar.
+   */
   handleCharacterHit() {
     this.character.hit();
     this.statusBar.setPercentage(this.character.energy);
     this.lastHitTime = Date.now();
   }
 
+  /**
+   * Handles throwable collision for one bottle-enemy pair.
+   *
+   * @param {ThrowableObject} bottle - Thrown bottle.
+   * @param {MovableObject} enemy - Potential hit enemy.
+   */
   processThrowableCollision(bottle, enemy) {
     if (bottle.isColliding(enemy) && !bottle.hasHit) {
       enemy.hit();
@@ -205,6 +273,11 @@ class World {
     }
   }
 
+  /**
+   * Removes a throwable object from world after a delay.
+   *
+   * @param {ThrowableObject} bottle - Bottle to remove.
+   */
   removeThrowableAfterDelay(bottle) {
     setTimeout(() => {
       const bottleIndex = this.throwableObjects.indexOf(bottle);
@@ -214,12 +287,18 @@ class World {
     }, 500);
   }
 
+  /**
+   * Renders static/parallax background layers.
+   */
   renderBackground() {
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
   }
 
+  /**
+   * Renders HUD elements.
+   */
   renderHud() {
     this.addToMap(this.coinBar);
     if (this.endbossBarVisible) {
@@ -229,6 +308,9 @@ class World {
     this.addToMap(this.statusBar);
   }
 
+  /**
+   * Renders dynamic game entities.
+   */
   renderEntities() {
     this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
@@ -239,6 +321,9 @@ class World {
     this.ctx.translate(-this.camera_x, 0);
   }
 
+  /**
+   * Draws a full frame and schedules next frame.
+   */
   draw() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.renderBackground();
@@ -247,12 +332,22 @@ class World {
     requestAnimationFrame(() => this.draw());
   }
 
+  /**
+   * Renders a list of objects using addToMap.
+   *
+   * @param {Array<DrawableObject>} objects - Objects to render.
+   */
   addObjectsToMap(objects) {
     objects.forEach((o) => {
       this.addToMap(o);
     });
   }
 
+  /**
+   * Draws one object and handles direction flip if needed.
+   *
+   * @param {DrawableObject} movableObject - Object to render.
+   */
   addToMap(movableObject) {
     if (movableObject.otherDirection) {
       this.flipImage(movableObject);
@@ -265,6 +360,11 @@ class World {
     }
   }
 
+  /**
+   * Applies horizontal flip transform before drawing.
+   *
+   * @param {DrawableObject} movableObject - Object to flip.
+   */
   flipImage(movableObject) {
     this.ctx.save();
     this.ctx.translate(movableObject.width, 0);
@@ -272,6 +372,11 @@ class World {
     movableObject.x = movableObject.x * -1;
   }
 
+  /**
+   * Restores transform after a flipped draw call.
+   *
+   * @param {DrawableObject} movableObject - Object to restore.
+   */
   flipImageBack(movableObject) {
     this.ctx.restore();
     movableObject.x = movableObject.x * -1;

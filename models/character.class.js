@@ -69,8 +69,9 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
-  
-
+  /**
+   * Creates the player character and initializes animations/audio.
+   */
   constructor() {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.walkAudio.volume = 0.2;
@@ -90,6 +91,9 @@ class Character extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Starts movement and animation update loops.
+   */
   animate() {
     setStoppableInterval(() => {
       this.moveCharacter();
@@ -100,6 +104,9 @@ class Character extends MovableObject {
     }, 1000 / 20);
   }
 
+  /**
+   * Processes input-driven movement, jump and camera follow.
+   */
   moveCharacter() {
     let moved = false;
 
@@ -131,6 +138,9 @@ class Character extends MovableObject {
     this.world.camera_x = -this.x + 100;
   }
 
+  /**
+   * Chooses and plays the current animation state.
+   */
   playCharacterAnimation() {
     if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
@@ -154,6 +164,9 @@ class Character extends MovableObject {
       }
   }
 
+  /**
+   * Triggers a character jump.
+   */
   jump() {
     this.speedY = 30;
   }

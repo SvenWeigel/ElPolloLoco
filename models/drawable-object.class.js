@@ -14,15 +14,30 @@ class DrawableObject {
     bottom: 0,
   };
 
+  /**
+   * Loads a single image and assigns it to the object.
+   *
+   * @param {string} path - Image source path.
+   */
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
   }
 
+  /**
+   * Draws the object image on the given rendering context.
+   *
+   * @param {CanvasRenderingContext2D} ctx - Canvas 2D context.
+   */
   draw(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
+  /**
+   * Preloads multiple images into the cache.
+   *
+   * @param {string[]} arr - Array of image paths.
+   */
   loadImages(arr) {
     arr.forEach((path) => {
       let img = new Image();
@@ -31,6 +46,11 @@ class DrawableObject {
     });
   }
 
+  /**
+   * Advances and displays the next frame from a frame list.
+   *
+   * @param {string[]} images - Array of animation frame paths.
+   */
   playAnimation(images) {
     let i = this.currentImage % images.length;
     let path = images[i];
@@ -38,6 +58,11 @@ class DrawableObject {
     this.currentImage++;
   }
 
+  /**
+   * Draws a debug frame around selected object types.
+   *
+   * @param {CanvasRenderingContext2D} ctx - Canvas 2D context.
+   */
   drawFrame(ctx) {
     if (
       this instanceof Character ||

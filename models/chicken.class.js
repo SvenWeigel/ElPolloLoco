@@ -12,6 +12,9 @@ class Chicken extends MovableObject {
 
   IMAGES_DEAD = ["assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png"];
 
+  /**
+   * Creates a standard chicken enemy.
+   */
   constructor() {
     super().loadImage(
       "assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
@@ -24,6 +27,9 @@ class Chicken extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Starts movement and animation intervals for the chicken.
+   */
   animate() {
     setStoppableInterval(() => {
       this.moveLeft();
@@ -38,6 +44,11 @@ class Chicken extends MovableObject {
     }, 200);
   }
 
+  /**
+   * Checks whether the chicken has no remaining energy.
+   *
+   * @returns {boolean} True if the chicken is dead.
+   */
   isDead() {
     return this.energy == 0;
   }

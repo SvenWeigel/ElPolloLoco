@@ -7,6 +7,12 @@ let isMuted = false;
 winSound = new Audio("audio/win_sound.mp3");
 deadBossSound = new Audio("audio/dead_boss.mp3");
 
+/**
+ * Registers an audio instance for global mute/stop handling.
+ *
+ * @param {HTMLAudioElement|null|undefined} audio - Audio object to register.
+ * @returns {HTMLAudioElement|null|undefined} The same audio reference.
+ */
 function registerAudio(audio) {
   if (!audio) {
     return audio;
@@ -16,17 +22,34 @@ function registerAudio(audio) {
   return audio;
 }
 
+/**
+ * Creates an interval and tracks its id so it can be cleared later.
+ *
+ * @param {Function} fn - Callback executed on each interval tick.
+ * @param {number} time - Interval duration in milliseconds.
+ * @returns {number} The created interval id.
+ */
 function setStoppableInterval(fn, time) {
   let id = setInterval(fn, time);
   allIntervalIds.push(id);
   return id;
 }
 
+/**
+ * Clears every tracked interval and resets the interval list.
+ *
+ * @returns {void}
+ */
 function clearAllIntervals() {
   allIntervalIds.forEach((id) => clearInterval(id));
   allIntervalIds = [];
 }
 
+/**
+ * Pauses and rewinds all registered audio elements.
+ *
+ * @returns {void}
+ */
 function stopAllAudio() {
   allAudioElements.forEach((audio) => {
     if (audio) {
@@ -37,12 +60,22 @@ function stopAllAudio() {
   allAudioElements = [];
 }
 
+/**
+ * Initializes the game world and level.
+ *
+ * @returns {void}
+ */
 function init() {
   canvas = document.getElementById("canvas");
   level();
   world = new World(canvas, keyboard);
 }
 
+/**
+ * Restarts the current game state without reloading the page.
+ *
+ * @returns {void}
+ */
 function restartGame() {
   clearAllIntervals();
   stopAllAudio();
@@ -54,6 +87,11 @@ function restartGame() {
   world = new World(canvas, keyboard);
 }
 
+/**
+ * Hides the start screen and starts the game.
+ *
+ * @returns {void}
+ */
 function hideStartScreen() {
   const startScreen = document.getElementById("start-screen");
   startScreen.classList.add("d-none");
@@ -62,6 +100,11 @@ function hideStartScreen() {
   init();
 }
 
+/**
+ * Toggles global mute state for all registered audio elements.
+ *
+ * @returns {void}
+ */
 function muteGame() {
   isMuted = !isMuted;
   allAudioElements.forEach((audio) => {
@@ -71,11 +114,21 @@ function muteGame() {
   });
 }
 
+/**
+ * Toggles visibility of the on-screen mobile controls.
+ *
+ * @returns {void}
+ */
 function toggleMobileControls() {
   let mobileControll = document.getElementById("mobile-controll");
   mobileControll.classList.toggle("d-none");
 }
 
+/**
+ * Handles the win sequence (audio, stop loops, show win overlay).
+ *
+ * @returns {void}
+ */
 function youWin() {
   const winScreen = document.getElementById("you-win");
   if (winScreen) {
@@ -93,6 +146,11 @@ function youWin() {
   }
 }
 
+/**
+ * Handles the lose sequence (show lose overlay and stop loops).
+ *
+ * @returns {void}
+ */
 function youLose() {
   const loseScreen = document.getElementById("game-over");
   if (loseScreen) {

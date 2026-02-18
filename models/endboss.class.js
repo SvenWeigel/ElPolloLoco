@@ -46,6 +46,9 @@ class Endboss extends MovableObject {
     "assets/img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
+  /**
+   * Creates the endboss and initializes animation/audio state.
+   */
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_ALERT);
@@ -59,6 +62,9 @@ class Endboss extends MovableObject {
     this.animate();
   }
 
+  /**
+   * Activates the endboss once it has been seen by the player.
+   */
   activate() {
     if (this.isAwake) {
       return;
@@ -67,6 +73,9 @@ class Endboss extends MovableObject {
     this.nextAttackAt = Date.now() + 800;
   }
 
+  /**
+   * Starts movement and animation intervals for the endboss.
+   */
   animate() {
     setStoppableInterval(() => {
       if (this.isDead() || this.isHurt() || !this.isAwake) {
@@ -96,14 +105,27 @@ class Endboss extends MovableObject {
     }, 140);
   }
 
+  /**
+   * Checks whether the endboss is dead.
+   *
+   * @returns {boolean} True if no energy remains.
+   */
   isDead() {
     return this.energy <= 0;
   }
 
+  /**
+   * Indicates whether the endboss is currently in attack phase.
+   *
+   * @returns {boolean} True while attacking.
+   */
   attacking() {
     return this.isAttackingPhase;
   }
 
+/**
+ * Updates attack cycle state (approach/attack/retreat).
+ */
 updateAttackCycle() {
   this.isMoving = false;
     const now = Date.now();
@@ -120,6 +142,11 @@ updateAttackCycle() {
     }
 }
 
+  /**
+   * Handles retreat movement until start position is reached.
+   *
+   * @param {number} now - Current timestamp.
+   */
 handleRetreating(now) {
   this.isMoving = true;
     this.moveAwayFromPlayer();
@@ -130,6 +157,11 @@ handleRetreating(now) {
     }
 }
 
+    /**
+     * Handles active attack movement and attack timeout.
+     *
+     * @param {number} now - Current timestamp.
+     */
 handleAttacking(now) {
   this.isMoving = true;
     this.moveTowardPlayer();
@@ -139,6 +171,9 @@ handleAttacking(now) {
     }
 }
 
+    /**
+     * Handles movement into attack range.
+     */
 handleApproaching() {
     if (this.x > this.attackTriggerX) {
     this.isMoving = true;
@@ -149,12 +184,18 @@ handleApproaching() {
     }
 }
 
+  /**
+   * Moves the endboss toward the player area.
+   */
   moveTowardPlayer() {
     if (this.x > 100) {
       this.x -= this.speed;
     }
   }
 
+  /**
+   * Moves the endboss back to its starting position.
+   */
   moveAwayFromPlayer() {
     if (this.x < this.startX) {
       this.x += this.speed;
