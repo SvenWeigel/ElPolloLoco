@@ -3,6 +3,10 @@ let level1;
 function level() {
   level1 = new Level(
     [
+      new ChickenSmall(),
+      new ChickenSmall(),
+      new ChickenSmall(),
+      new ChickenSmall(),
       new Chicken(),
       new Chicken(),
       new Chicken(),

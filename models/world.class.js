@@ -58,11 +58,9 @@ class World {
     if (!endboss || endboss.isAwake) {
       return;
     }
-
     const viewportLeft = -this.camera_x - 200;
     const viewportRight = viewportLeft + this.canvas.width;
     const bossIsVisible = endboss.x < viewportRight && endboss.x + endboss.width > viewportLeft;
-
     if (bossIsVisible) {
       endboss.activate();
     }
@@ -96,7 +94,7 @@ class World {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
         const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
-        if (isOnTop && enemy instanceof Chicken && !enemy.isDead()) {
+        if (isOnTop && (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
           if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300
           ) {
             enemy.hit();
