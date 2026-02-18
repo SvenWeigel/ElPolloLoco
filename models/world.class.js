@@ -8,6 +8,7 @@ class World {
   statusBar = new StatusBar();
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
+  endbossBar = new EndbossBar();
   bottleAmount = 0;
   throwableObjects = [];
   colectables = [];
@@ -100,6 +101,7 @@ class World {
             enemy.hit();
             this.character.speedY = 15;
             this.lastBounceTimes[index] = Date.now();
+            this.updateEndbossBar(enemy);
           }
         } else if (
           !isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown
@@ -130,6 +132,7 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (bottle.isColliding(enemy) && !bottle.hasHit) {
           enemy.hit();
+          this.updateEndbossBar(enemy);
           bottle.onHit();
           setTimeout(() => {
             const bottleIndex = this.throwableObjects.indexOf(bottle);
@@ -184,12 +187,21 @@ class World {
     });
   }
 
+  updateEndbossBar(enemy) {
+    if (!(enemy instanceof Endboss)) {
+      return;
+    }
+    const percentage = Math.max(0, Math.min(100, Math.round((enemy.energy / enemy.maxEnergy) * 100)));
+    this.endbossBar.setPercentage(percentage);
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.coinBar);
+    this.addToMap(this.endbossBar);
     this.addToMap(this.bottleBar);
     this.addToMap(this.statusBar);
     this.ctx.translate(this.camera_x, 0);
