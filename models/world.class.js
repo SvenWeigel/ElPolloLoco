@@ -96,22 +96,7 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
-        const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
-        if (isOnTop && (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
-          if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300
-          ) {
-            enemy.hit();
-            this.character.speedY = 15;
-            this.lastBounceTimes[index] = Date.now();
-            this.updateEndbossBar(enemy);
-          }
-        } else if (
-          !isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown
-        ) {
-          this.character.hit();
-          this.statusBar.setPercentage(this.character.energy);
-          this.lastHitTime = Date.now();
-        }
+        this.processEnemyCollision(enemy, index);
       }
     });
   }
@@ -130,19 +115,9 @@ class World {
   }
 
   checkThrowableCollisions() {
-    this.throwableObjects.forEach((bottle, index) => {
+    this.throwableObjects.forEach((bottle) => {
       this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy) && !bottle.hasHit) {
-          enemy.hit();
-          this.updateEndbossBar(enemy);
-          bottle.onHit();
-          setTimeout(() => {
-            const bottleIndex = this.throwableObjects.indexOf(bottle);
-            if (bottleIndex !== -1) {
-              this.throwableObjects.splice(bottleIndex, 1);
-            }
-          }, 500);
-        }
+        this.processThrowableCollision(bottle, enemy);
       });
     });
   }
@@ -197,17 +172,64 @@ class World {
     this.endbossBar.setPercentage(percentage);
   }
 
-  draw() {
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+  processEnemyCollision(enemy, index) {
+    const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
+    if (isOnTop && (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
+      this.handleStomp(enemy, index);
+    } else if (!isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown) {
+      this.handleCharacterHit();
+    }
+  }
+
+  handleStomp(enemy, index) {
+    if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300) {
+      enemy.hit();
+      this.character.speedY = 15;
+      this.lastBounceTimes[index] = Date.now();
+      this.updateEndbossBar(enemy);
+    }
+  }
+
+  handleCharacterHit() {
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
+    this.lastHitTime = Date.now();
+  }
+
+  processThrowableCollision(bottle, enemy) {
+    if (bottle.isColliding(enemy) && !bottle.hasHit) {
+      enemy.hit();
+      this.updateEndbossBar(enemy);
+      bottle.onHit();
+      this.removeThrowableAfterDelay(bottle);
+    }
+  }
+
+  removeThrowableAfterDelay(bottle) {
+    setTimeout(() => {
+      const bottleIndex = this.throwableObjects.indexOf(bottle);
+      if (bottleIndex !== -1) {
+        this.throwableObjects.splice(bottleIndex, 1);
+      }
+    }, 500);
+  }
+
+  renderBackground() {
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
+  }
+
+  renderHud() {
     this.addToMap(this.coinBar);
     if (this.endbossBarVisible) {
       this.addToMap(this.endbossBar);
     }
     this.addToMap(this.bottleBar);
     this.addToMap(this.statusBar);
+  }
+
+  renderEntities() {
     this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
     this.addObjectsToMap(this.throwableObjects);
@@ -215,6 +237,13 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.clouds);
     this.ctx.translate(-this.camera_x, 0);
+  }
+
+  draw() {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.renderBackground();
+    this.renderHud();
+    this.renderEntities();
     requestAnimationFrame(() => this.draw());
   }
 
