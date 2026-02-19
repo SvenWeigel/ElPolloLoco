@@ -15,8 +15,11 @@ body {
   justify-content: center;
   font-family: "zabras", Arial, Helvetica, sans-serif;
   background-image: url("assets/img/desert.png");
+  background-size: cover;
+  background-repeat: no-repeat;
   background-position: center;
   margin: 0;
+  height: 100vh;
 }
 
 footer {
@@ -27,6 +30,7 @@ footer {
   color: white;
   text-align: center;
   font-size: 18px;
+  z-index: 10;
 }
 
 a {
@@ -173,7 +177,6 @@ h2 {
   left: 25%;
   width: 50%;
   height: 50%;
-  background-image: url("assets/img/9_intro_outro_screens/win/win_screen.png");
   background-position: center;
   background-size: cover;
   z-index: 5;
@@ -189,7 +192,6 @@ h2 {
   left: 25%;
   width: 50%;
   height: 50%;
-  background-image: url("assets/img/9_intro_outro_screens/lose/lose_screen.png");
   background-position: center;
   background-size: cover;
   z-index: 5;
@@ -244,6 +246,23 @@ h2 {
   cursor: pointer;
 }
 
+#main-menu-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  background-color: #ffca1a;
+  border: none;
+  border-radius: 25px;
+  color: black;
+  cursor: pointer;
+}
+
 #restart-btn:hover {
   border-color: #ffff00;
   box-shadow: 0 0 20px rgba(255, 212, 13, 0.6);
@@ -268,7 +287,6 @@ h2 {
   border: none;
   border-radius: 25px;
   color: black;
-  /* cursor: pointer; */
 }
 
 #left-right {
@@ -295,9 +313,9 @@ h2 {
   #explain-controls {
     display: none;
   }
-  footer {
+  /* footer {
     display: none;
-  }
+  } */
 
   canvas {
     width: 100%;

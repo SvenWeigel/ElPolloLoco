@@ -97,6 +97,12 @@ function hideStartScreen() {
   startScreen.classList.add("d-none");
   const headline = document.querySelector("h1");
   headline.classList.add("hidden");
+  const restartBtn = document.getElementById("restart-icon");
+  restartBtn.classList.remove("d-none");
+  const muteBtn = document.getElementById("mute-btn");
+  muteBtn.classList.remove("d-none");
+  const footer = document.querySelector("footer");
+  footer.classList.add("d-none");
   init();
 }
 
@@ -111,7 +117,30 @@ function muteGame() {
     if (audio) {
       audio.muted = isMuted;
     }
+    if (!isMuted) {
+      document.getElementById("mute-btn").src = "assets/icons/mute_btn.svg";
+    } else {
+      document.getElementById("mute-btn").src = "assets/icons/unmute.svg";
+    }
   });
+}
+
+function goToMainMenu() {
+  clearAllIntervals();
+  stopAllAudio();
+  document.getElementById("you-win").style.display = "none";
+  document.getElementById("game-over").style.display = "none";
+  document.getElementById("restart-btn-div").classList.add("d-none");
+  const startScreen = document.getElementById("start-screen");
+  startScreen.classList.remove("d-none");
+  const headline = document.querySelector("h1");
+  headline.classList.remove("hidden");
+  const restartBtn = document.getElementById("restart-icon");
+  restartBtn.classList.add("d-none");
+  const muteBtn = document.getElementById("mute-btn");
+  muteBtn.classList.add("d-none");
+  const footer = document.querySelector("footer");
+  footer.classList.remove("d-none");
 }
 
 /**
