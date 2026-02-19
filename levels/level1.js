@@ -125,12 +125,7 @@ function level() {
       new Bottle(1000, 100),
       new Bottle(1100, 100),
       new Bottle(1200, 100),
-      new Bottle(1300, 100),
-      new Bottle(1400, 100),
-      new Bottle(1500, 100),
-      new Bottle(1600, 100),
-      new Bottle(1700, 100),
-      new Bottle(1800, 100)
+      new Bottle(1300, 100)
     ],
   );
 }
