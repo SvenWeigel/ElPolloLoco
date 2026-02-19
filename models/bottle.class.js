@@ -1,5 +1,12 @@
 class Bottle extends Colectables {
 
+    offset = {
+        top: 20,
+        left: 35,
+        right: 25,
+        bottom: 10
+    };
+
     IMAGES_GROUND = [
         "assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
         "assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png"
