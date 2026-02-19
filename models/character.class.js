@@ -7,6 +7,7 @@ class Character extends MovableObject {
   currentImage = 0;
   isMoving = false;
   gameOverAudioPlayed = false;
+  idleStartTime = null;
   world;
   walkAudio = new Audio("audio/walking_sound.mp3");
   jumpAudio = new Audio("audio/jump.mp3");
@@ -70,6 +71,19 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+  IMAGES_LONG_IDLE = [
+    "assets/img/2_character_pepe/1_idle/long_idle/I-11.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-12.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-13.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-14.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-15.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-16.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-17.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-18.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-19.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-20.png",
+  ];
+
   /**
    * Creates the player character and initializes animations/audio.
    */
@@ -88,6 +102,7 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_IDLE);
+    this.loadImages(this.IMAGES_LONG_IDLE);
     this.applyGravity();
     this.animate();
   }
@@ -155,24 +170,68 @@ class Character extends MovableObject {
    */
   playCharacterAnimation() {
     if (this.isDead()) {
-      this.playAnimation(this.IMAGES_DEAD);
-      if (!this.gameOverAudioPlayed) {
-        this.gameOverAudio.play();
-        this.gameOverAudioPlayed = true;
-      }
+      this.playDeadAnimation();
     } else if (this.isHurt()) {
-      this.playAnimation(this.IMAGES_HURT);
-      if (this.hurtAudio.paused) {
-        this.hurtAudio.play();
-      }
+      this.playHurtAnimation();
     } else if (this.isAboveGround()) {
-      this.playAnimation(this.IMAGES_JUMPING);
+      this.playJumpingAnimation();
+    } else if (this.isMoving) {
+      this.playWalkingAnimation();
     } else {
-      if (this.isMoving) {
-        this.playAnimation(this.IMAGES_WALKING);
-      } else {
-        this.playAnimation(this.IMAGES_IDLE);
-      }
+      this.playIdleAnimation();
+    }
+  }
+
+  /**
+   * Plays the death animation and game over sound.
+   */
+  playDeadAnimation() {
+    this.idleStartTime = null;
+    this.playAnimation(this.IMAGES_DEAD);
+    if (!this.gameOverAudioPlayed) {
+      this.gameOverAudio.play();
+      this.gameOverAudioPlayed = true;
+    }
+  }
+
+  /**
+   * Plays the hurt animation and hurt sound.
+   */
+  playHurtAnimation() {
+    this.idleStartTime = null;
+    this.playAnimation(this.IMAGES_HURT);
+    if (this.hurtAudio.paused) {
+      this.hurtAudio.play();
+    }
+  }
+
+  /**
+   * Plays the jumping animation while in air.
+   */
+  playJumpingAnimation() {
+    this.idleStartTime = null;
+    this.playAnimation(this.IMAGES_JUMPING);
+  }
+
+  /**
+   * Plays the walking animation.
+   */
+  playWalkingAnimation() {
+    this.idleStartTime = null;
+    this.playAnimation(this.IMAGES_WALKING);
+  }
+
+  /**
+   * Plays idle or long idle animation based on idle duration.
+   */
+  playIdleAnimation() {
+    if (!this.idleStartTime) {
+      this.idleStartTime = Date.now();
+    }
+    if (Date.now() - this.idleStartTime >= 5000) {
+      this.playAnimation(this.IMAGES_LONG_IDLE);
+    } else {
+      this.playAnimation(this.IMAGES_IDLE);
     }
   }
 
