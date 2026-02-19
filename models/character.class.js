@@ -200,6 +200,7 @@ class Character extends MovableObject {
   playHurtAnimation() {
     this.idleStartTime = null;
     this.playAnimation(this.IMAGES_HURT);
+    console.log(this.energy); // Debug log for energy level***********************
     if (this.hurtAudio.paused) {
       this.hurtAudio.play();
     }

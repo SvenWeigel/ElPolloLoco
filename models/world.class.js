@@ -11,6 +11,7 @@ class World {
   endbossBar = new EndbossBar();
   endbossBarVisible = false;
   bottleAmount = 0;
+  bottleMax = 5;
   throwableObjects = [];
   colectables = [];
   lastThrowTime = 0;
@@ -187,7 +188,9 @@ class World {
       );
       this.throwableObjects.push(bottle);
       this.bottleAmount--;
-      this.bottleBar.setPercentage(this.bottleAmount * 20);
+      // update bottle bar as percentage of bottleMax
+      const bottlePercent = Math.max(0, Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)));
+      this.bottleBar.setPercentage(bottlePercent);
       this.lastThrowTime = Date.now();
     }
   }
@@ -218,7 +221,9 @@ class World {
       ) {
         this.level.colectables.splice(index, 1);
         this.bottleAmount++;
-        this.bottleBar.setPercentage(this.bottleAmount * 20);
+        if (this.bottleAmount > this.bottleMax) this.bottleAmount = this.bottleMax;
+        const bottlePercent = Math.max(0, Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)));
+        this.bottleBar.setPercentage(bottlePercent);
       }
     });
   }

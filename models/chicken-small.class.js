@@ -2,7 +2,7 @@ class ChickenSmall extends MovableObject {
   y = 380;
   height = 45;
   width = 60;
-  energy = 5;
+  energy = 20;
 
   IMAGES_WALKING = [
     "assets/img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
