@@ -12,7 +12,7 @@ class Character extends MovableObject {
   jumpAudio = new Audio("audio/jump.mp3");
   hurtAudio = new Audio("audio/hurt.mp3");
   gameOverAudio = new Audio("audio/gameover.mp3");
-  
+
   offset = {
     top: 110,
     left: 20,
@@ -101,8 +101,12 @@ class Character extends MovableObject {
     }, 1000 / 60);
 
     setStoppableInterval(() => {
+      this.playJumpAnimation();
+    }, 1000 / 60);
+
+    setStoppableInterval(() => {
       this.playCharacterAnimation();
-    }, 1000 / 20);
+    }, 1000 / 10);
   }
 
   /**
@@ -139,30 +143,37 @@ class Character extends MovableObject {
     this.world.camera_x = -this.x + 100;
   }
 
+  playJumpAnimation() {
+    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+      this.jump();
+      this.jumpAudio.play();
+    }
+  }
+
   /**
    * Chooses and plays the current animation state.
    */
   playCharacterAnimation() {
     if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-        if (!this.gameOverAudioPlayed) {
-          this.gameOverAudio.play();
-          this.gameOverAudioPlayed = true;
-        }
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
-        if (this.hurtAudio.paused) {
-          this.hurtAudio.play();
-        }
-      } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPING);
-      } else {
-        if (this.isMoving) {
-          this.playAnimation(this.IMAGES_WALKING);
-        } else {
-          this.playAnimation(this.IMAGES_IDLE);
-        }
+      this.playAnimation(this.IMAGES_DEAD);
+      if (!this.gameOverAudioPlayed) {
+        this.gameOverAudio.play();
+        this.gameOverAudioPlayed = true;
       }
+    } else if (this.isHurt()) {
+      this.playAnimation(this.IMAGES_HURT);
+      if (this.hurtAudio.paused) {
+        this.hurtAudio.play();
+      }
+    } else if (this.isAboveGround()) {
+      this.playAnimation(this.IMAGES_JUMPING);
+    } else {
+      if (this.isMoving) {
+        this.playAnimation(this.IMAGES_WALKING);
+      } else {
+        this.playAnimation(this.IMAGES_IDLE);
+      }
+    }
   }
 
   /**
