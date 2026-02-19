@@ -3,6 +3,7 @@ class Character extends MovableObject {
   width = 120;
   y = 80;
   speed = 8;
+  energy = 100;
   currentImage = 0;
   isMoving = false;
   gameOverAudioPlayed = false;
@@ -13,9 +14,9 @@ class Character extends MovableObject {
   gameOverAudio = new Audio("audio/gameover.mp3");
   
   offset = {
-    top: 120,
+    top: 110,
     left: 20,
-    right: 30,
+    right: 35,
     bottom: 10
   };
 

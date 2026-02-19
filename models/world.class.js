@@ -16,7 +16,7 @@ class World {
   lastThrowTime = 0;
   throwCooldown = 2000;
   lastHitTime = 0;
-  hitCooldown = 100;
+  hitCooldown = 500;
   backgroundMusic = new Audio("audio/background_music.mp3");
   lastBounceTimes = {};
   lastCharacterY = 0; 
@@ -118,11 +118,28 @@ class World {
    * Checks collisions between character and enemies.
    */
   checkCollisions() {
+    const colliding = [];
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
-        this.processEnemyCollision(enemy, index);
+        colliding.push({ enemy, index });
       }
     });
+    for (const item of colliding) {
+      if (item.enemy instanceof Chicken) {
+        const handled = this.processEnemyCollision(item.enemy, item.index);
+        if (handled) return;
+      }
+    }
+    for (const item of colliding) {
+      if (item.enemy instanceof ChickenSmall) {
+        const handled = this.processEnemyCollision(item.enemy, item.index);
+        if (handled) return;
+      }
+    }
+    for (const item of colliding) {
+      const handled = this.processEnemyCollision(item.enemy, item.index);
+      if (handled) return;
+    }
   }
 
   /**
@@ -132,11 +149,11 @@ class World {
    * @returns {boolean} True if stomp conditions are met.
    */
   isCharacterJumpingOnEnemy(enemy) {
-    const previousCharacterBottom = this.lastCharacterY + this.character.height;
-    const currentCharacterBottom = this.character.y + this.character.height;
-    const enemyTop = enemy.y;
-    const stompTolerance = 20;
-    const isFalling = this.character.y > this.lastCharacterY;
+    const previousCharacterBottom = this.lastCharacterY + this.character.height - this.character.offset.bottom;
+    const currentCharacterBottom = this.character.y + 5 + this.character.height - this.character.offset.bottom;
+    const enemyTop = enemy.y + enemy.offset.top;
+    const stompTolerance = (enemy instanceof Chicken) ? 36 : 30;
+    const isFalling = this.character.speedY < 0 || this.character.y > this.lastCharacterY;
     return (
       isFalling &&
       previousCharacterBottom <= enemyTop + stompTolerance &&
@@ -226,12 +243,22 @@ class World {
    * @param {number} index - Enemy index in array.
    */
   processEnemyCollision(enemy, index) {
+    const isChicken = enemy instanceof Chicken || enemy instanceof ChickenSmall;
     const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
-    if (isOnTop && (enemy instanceof Chicken || enemy instanceof ChickenSmall) && !enemy.isDead()) {
-      this.handleStomp(enemy, index);
-    } else if (!isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown) {
+    if (isChicken && !enemy.isDead()) {
+      const enemyTop = enemy.y + enemy.offset.top;
+      if (isOnTop) {
+        this.character.y = enemyTop - this.character.height + this.character.offset.bottom;
+        this.character.speedY = 0;
+        this.lastCharacterY = this.character.y;
+        this.handleStomp(enemy, index);
+        return true;
+      }
+    }
+    if (!isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown) {
       this.handleCharacterHit();
     }
+    return false;
   }
 
   /**
@@ -243,7 +270,7 @@ class World {
   handleStomp(enemy, index) {
     if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300) {
       enemy.hit();
-      this.character.speedY = 15;
+      this.character.speedY = 20;
       this.lastBounceTimes[index] = Date.now();
       this.updateEndbossBar(enemy);
     }
@@ -327,8 +354,8 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.renderBackground();
-    this.renderHud();
     this.renderEntities();
+    this.renderHud();
     requestAnimationFrame(() => this.draw());
   }
 
@@ -353,7 +380,7 @@ class World {
       this.flipImage(movableObject);
     }
     movableObject.draw(this.ctx);
-    // movableObject.drawFrame(this.ctx);
+    movableObject.drawFrame(this.ctx);
 
     if (movableObject.otherDirection) {
       this.flipImageBack(movableObject);
