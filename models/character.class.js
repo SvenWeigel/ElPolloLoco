@@ -18,7 +18,7 @@ class Character extends MovableObject {
     top: 110,
     left: 20,
     right: 35,
-    bottom: 10
+    bottom: 10,
   };
 
   IMAGES_WALKING = [
@@ -39,7 +39,7 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/3_jump/J-36.png",
     "assets/img/2_character_pepe/3_jump/J-37.png",
     "assets/img/2_character_pepe/3_jump/J-38.png",
-    "assets/img/2_character_pepe/3_jump/J-39.png"
+    "assets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
   IMAGES_DEAD = [
@@ -158,6 +158,11 @@ class Character extends MovableObject {
     this.world.camera_x = -this.x + 100;
   }
 
+  /**
+   * Checks whether the character has no remaining energy.
+   *
+   * @returns {boolean} True if the character is dead.
+   */
   playJumpAnimation() {
     if (this.world.keyboard.SPACE && !this.isAboveGround()) {
       this.jump();

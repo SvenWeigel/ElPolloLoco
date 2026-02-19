@@ -125,6 +125,12 @@ function muteGame() {
   });
 }
 
+/**
+ * Returns to the main menu by clearing game state and showing the start screen.
+ *
+ * @returns {void}
+ */
+
 function goToMainMenu() {
   clearAllIntervals();
   stopAllAudio();

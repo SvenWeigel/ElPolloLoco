@@ -20,7 +20,7 @@ class World {
   hitCooldown = 500;
   backgroundMusic = new Audio("audio/background_music.mp3");
   lastBounceTimes = {};
-  lastCharacterY = 0; 
+  lastCharacterY = 0;
   hasWon = false;
   hasLost = false;
 
@@ -72,13 +72,16 @@ class World {
    * Activates the endboss and shows its bar on first sight.
    */
   activateEndbossOnFirstSight() {
-    const endboss = this.level.enemies.find((enemy) => enemy instanceof Endboss);
+    const endboss = this.level.enemies.find(
+      (enemy) => enemy instanceof Endboss,
+    );
     if (!endboss || endboss.isAwake) {
       return;
     }
     const viewportLeft = -this.camera_x - 200;
     const viewportRight = viewportLeft + this.canvas.width;
-    const bossIsVisible = endboss.x < viewportRight && endboss.x + endboss.width > viewportLeft;
+    const bossIsVisible =
+      endboss.x < viewportRight && endboss.x + endboss.width > viewportLeft;
     if (bossIsVisible) {
       endboss.activate();
       this.endbossBarVisible = true;
@@ -116,31 +119,61 @@ class World {
   }
 
   /**
-   * Checks collisions between character and enemies.
+   * Collects enemies currently colliding with the character.
+   *
+   * @returns {Array<{enemy: import('./movable-object.class.js')|object, index: number}>} Array of collision descriptors.
    */
-  checkCollisions() {
+  getCollidingEnemies() {
     const colliding = [];
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
         colliding.push({ enemy, index });
       }
     });
-    for (const item of colliding) {
-      if (item.enemy instanceof Chicken) {
-        const handled = this.processEnemyCollision(item.enemy, item.index);
-        if (handled) return;
+    return colliding;
+  }
+
+  /**
+   * Process colliding enemies in a prioritized order:
+   *  1. `Chicken`
+   *  2. `ChickenSmall`
+   *  3. any other enemy
+   *
+   * Stops processing when a collision handler returns `true` (handled).
+   *
+   * @param {Array<{enemy: object, index: number}>} colliding - collisions to process
+   * @returns {boolean} true if processing stopped early because a collision was handled
+   */
+  processCollidingEnemies(colliding) {
+    const processByType = (Type) => {
+      for (const item of colliding) {
+        if (item.enemy instanceof Type) {
+          const handled = this.processEnemyCollision(item.enemy, item.index);
+          if (handled) return true;
+        }
       }
-    }
-    for (const item of colliding) {
-      if (item.enemy instanceof ChickenSmall) {
-        const handled = this.processEnemyCollision(item.enemy, item.index);
-        if (handled) return;
-      }
-    }
+      return false;
+    };
+
+    if (processByType(Chicken)) return true;
+    if (processByType(ChickenSmall)) return true;
+
     for (const item of colliding) {
       const handled = this.processEnemyCollision(item.enemy, item.index);
-      if (handled) return;
+      if (handled) return true;
     }
+    return false;
+  }
+
+  /**
+   * Checks collisions between character and enemies and delegates handling.
+   * Uses helper functions to keep responsibilities small and the logic testable.
+   *
+   * @returns {void}
+   */
+  checkCollisions() {
+    const colliding = this.getCollidingEnemies();
+    this.processCollidingEnemies(colliding);
   }
 
   /**
@@ -150,11 +183,19 @@ class World {
    * @returns {boolean} True if stomp conditions are met.
    */
   isCharacterJumpingOnEnemy(enemy) {
-    const previousCharacterBottom = this.lastCharacterY + this.character.height - this.character.offset.bottom;
-    const currentCharacterBottom = this.character.y + 5 + this.character.height - this.character.offset.bottom;
+    const previousCharacterBottom =
+      this.lastCharacterY +
+      this.character.height -
+      this.character.offset.bottom;
+    const currentCharacterBottom =
+      this.character.y +
+      5 +
+      this.character.height -
+      this.character.offset.bottom;
     const enemyTop = enemy.y + enemy.offset.top;
-    const stompTolerance = (enemy instanceof Chicken) ? 36 : 30;
-    const isFalling = this.character.speedY < 0 || this.character.y > this.lastCharacterY;
+    const stompTolerance = enemy instanceof Chicken ? 36 : 30;
+    const isFalling =
+      this.character.speedY < 0 || this.character.y > this.lastCharacterY;
     return (
       isFalling &&
       previousCharacterBottom <= enemyTop + stompTolerance &&
@@ -188,8 +229,10 @@ class World {
       );
       this.throwableObjects.push(bottle);
       this.bottleAmount--;
-      // update bottle bar as percentage of bottleMax
-      const bottlePercent = Math.max(0, Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)));
+      const bottlePercent = Math.max(
+        0,
+        Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)),
+      );
       this.bottleBar.setPercentage(bottlePercent);
       this.lastThrowTime = Date.now();
     }
@@ -221,8 +264,12 @@ class World {
       ) {
         this.level.colectables.splice(index, 1);
         this.bottleAmount++;
-        if (this.bottleAmount > this.bottleMax) this.bottleAmount = this.bottleMax;
-        const bottlePercent = Math.max(0, Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)));
+        if (this.bottleAmount > this.bottleMax)
+          this.bottleAmount = this.bottleMax;
+        const bottlePercent = Math.max(
+          0,
+          Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)),
+        );
         this.bottleBar.setPercentage(bottlePercent);
       }
     });
@@ -237,7 +284,10 @@ class World {
     if (!(enemy instanceof Endboss)) {
       return;
     }
-    const percentage = Math.max(0, Math.min(100, Math.round((enemy.energy / enemy.maxEnergy) * 100)));
+    const percentage = Math.max(
+      0,
+      Math.min(100, Math.round((enemy.energy / enemy.maxEnergy) * 100)),
+    );
     this.endbossBar.setPercentage(percentage);
   }
 
@@ -253,14 +303,19 @@ class World {
     if (isChicken && !enemy.isDead()) {
       const enemyTop = enemy.y + enemy.offset.top;
       if (isOnTop) {
-        this.character.y = enemyTop - this.character.height + this.character.offset.bottom;
+        this.character.y =
+          enemyTop - this.character.height + this.character.offset.bottom;
         this.character.speedY = 0;
         this.lastCharacterY = this.character.y;
         this.handleStomp(enemy, index);
         return true;
       }
     }
-    if (!isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown) {
+    if (
+      !isOnTop &&
+      !enemy.isDead() &&
+      Date.now() - this.lastHitTime > this.hitCooldown
+    ) {
       this.handleCharacterHit();
     }
     return false;
@@ -273,7 +328,10 @@ class World {
    * @param {number} index - Enemy index in array.
    */
   handleStomp(enemy, index) {
-    if (!this.lastBounceTimes[index] || Date.now() - this.lastBounceTimes[index] > 300) {
+    if (
+      !this.lastBounceTimes[index] ||
+      Date.now() - this.lastBounceTimes[index] > 300
+    ) {
       enemy.hit();
       this.character.speedY = 20;
       this.lastBounceTimes[index] = Date.now();

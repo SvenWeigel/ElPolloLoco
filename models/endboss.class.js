@@ -20,7 +20,7 @@ class Endboss extends MovableObject {
     top: 0,
     left: 40,
     right: 0,
-    bottom: 0
+    bottom: 0,
   };
 
   IMAGES_WALKING = [
@@ -130,66 +130,66 @@ class Endboss extends MovableObject {
     return this.isAttackingPhase;
   }
 
-/**
- * Updates attack cycle state (approach/attack/retreat).
- */
-updateAttackCycle() {
-  this.isMoving = false;
+  /**
+   * Updates attack cycle state (approach/attack/retreat).
+   */
+  updateAttackCycle() {
+    this.isMoving = false;
     const now = Date.now();
     if (this.isRetreating) {
-        this.handleRetreating(now);
-        return;
+      this.handleRetreating(now);
+      return;
     }
     if (this.isAttackingPhase) {
-        this.handleAttacking(now);
-        return;
+      this.handleAttacking(now);
+      return;
     }
     if (now >= this.nextAttackAt) {
-        this.handleApproaching();
+      this.handleApproaching();
     }
-}
+  }
 
   /**
    * Handles retreat movement until start position is reached.
    *
    * @param {number} now - Current timestamp.
    */
-handleRetreating(now) {
-  this.isMoving = true;
+  handleRetreating(now) {
+    this.isMoving = true;
     this.moveAwayFromPlayer();
     if (this.x >= this.startX) {
-        this.x = this.startX;
-        this.isRetreating = false;
-        this.nextAttackAt = now + this.attackCooldown;
+      this.x = this.startX;
+      this.isRetreating = false;
+      this.nextAttackAt = now + this.attackCooldown;
     }
-}
+  }
 
-    /**
-     * Handles active attack movement and attack timeout.
-     *
-     * @param {number} now - Current timestamp.
-     */
-handleAttacking(now) {
-  this.isMoving = true;
+  /**
+   * Handles active attack movement and attack timeout.
+   *
+   * @param {number} now - Current timestamp.
+   */
+  handleAttacking(now) {
+    this.isMoving = true;
     this.moveTowardPlayer();
     if (now - this.attackStartedAt >= this.attackDuration) {
-        this.isAttackingPhase = false;
-        this.isRetreating = true;
+      this.isAttackingPhase = false;
+      this.isRetreating = true;
     }
-}
+  }
 
-    /**
-     * Handles movement into attack range.
-     */
-handleApproaching() {
+  /**
+   * Handles movement into attack range.
+   */
+  handleApproaching() {
     if (this.x > this.attackTriggerX) {
-    this.isMoving = true;
-        this.moveTowardPlayer();
+      this.isMoving = true;
+      this.moveTowardPlayer();
     } else {
-        this.isAttackingPhase = true;
-        this.attackStartedAt = Date.now();
+      this.isAttackingPhase = true;
+      this.attackStartedAt = Date.now();
     }
-}
+  }
 
   /**
    * Moves the endboss toward the player area.
