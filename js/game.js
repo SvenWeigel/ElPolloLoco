@@ -23,6 +23,33 @@ function registerAudio(audio) {
 }
 
 /**
+ * Save the muted state to localStorage.
+ * Beginner-friendly: stores string "true" or "false".
+ *
+ * @param {boolean} muted - true when muted, false otherwise
+ * @returns {void}
+ */
+function saveMute(muted) {
+  try {
+    localStorage.setItem("el_pollo_muted", muted ? "true" : "false");
+  } catch (e) {}
+}
+
+/**
+ * Load the muted state from localStorage.
+ * Returns false if nothing stored or on error.
+ *
+ * @returns {boolean} muted state
+ */
+function loadMute() {
+  try {
+    return localStorage.getItem("el_pollo_muted") === "true";
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
  * Creates an interval and tracks its id so it can be cleared later.
  *
  * @param {Function} fn - Callback executed on each interval tick.
@@ -113,16 +140,17 @@ function hideStartScreen() {
  */
 function muteGame() {
   isMuted = !isMuted;
-  allAudioElements.forEach((audio) => {
-    if (audio) {
-      audio.muted = isMuted;
-    }
-    if (!isMuted) {
-      document.getElementById("mute-btn").src = "assets/icons/mute_btn.svg";
-    } else {
-      document.getElementById("mute-btn").src = "assets/icons/unmute.svg";
-    }
-  });
+  for (let i = 0; i < allAudioElements.length; i++) {
+    const audio = allAudioElements[i];
+    if (audio) audio.muted = isMuted;
+  }
+  const muteBtn = document.getElementById("mute-btn");
+  if (muteBtn) {
+    muteBtn.src = isMuted
+      ? "assets/icons/unmute.svg"
+      : "assets/icons/mute_btn.svg";
+  }
+  saveMute(isMuted);
 }
 
 /**
@@ -252,6 +280,18 @@ window.addEventListener("keyup", (e) => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
+  isMuted = loadMute();
+  const muteBtn = document.getElementById("mute-btn");
+  if (muteBtn) {
+    muteBtn.src = isMuted
+      ? "assets/icons/unmute.svg"
+      : "assets/icons/mute_btn.svg";
+  }
+
+  for (let i = 0; i < allAudioElements.length; i++) {
+    const audio = allAudioElements[i];
+    if (audio) audio.muted = isMuted;
+  }
   document.getElementById("left-btn").addEventListener("touchstart", (e) => {
     e.preventDefault();
     keyboard.LEFT = true;
