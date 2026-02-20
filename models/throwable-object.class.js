@@ -24,7 +24,7 @@ class ThrowableObject extends MovableObject {
    * @param {number} x - Initial x position.
    * @param {number} y - Initial y position.
    */
-  constructor(x, y) {
+  constructor(x, y, directionLeft = false) {
     super();
     this.throwSound = new Audio("audio/throw_sound.mp3");
     this.loadImage("assets/img/6_salsa_bottle/salsa_bottle.png");
@@ -32,6 +32,7 @@ class ThrowableObject extends MovableObject {
     this.height = 100;
     this.y = y;
     this.x = x;
+    this.directionLeft = directionLeft;
     this.loadImages(this.IMAGES_ROTATE);
     this.loadImages(this.IMAGES_ON_HIT);
     this.throwSound.volume = 0.2;
@@ -53,7 +54,8 @@ class ThrowableObject extends MovableObject {
         return;
       }
       this.playAnimation(this.IMAGES_ROTATE);
-      this.x += 10;
+      const dx = this.directionLeft ? -10 : 10;
+      this.x += dx;
     }, 1000 / 25);
   }
 

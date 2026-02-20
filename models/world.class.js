@@ -225,9 +225,11 @@ class World {
       Date.now() - this.lastThrowTime > this.throwCooldown &&
       this.bottleAmount > 0
     ) {
+      const spawnX = this.character.x + (this.character.otherDirection ? -50 : 50);
       let bottle = new ThrowableObject(
-        this.character.x + 50,
+        spawnX,
         this.character.y + 100,
+        this.character.otherDirection,
       );
       this.throwableObjects.push(bottle);
       if (this.character) {
