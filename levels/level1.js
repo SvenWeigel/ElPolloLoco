@@ -19,7 +19,11 @@ function level() {
       new Chicken(),
       new Endboss(),
     ],
-    [new Cloud()],
+    [
+      new Cloud(620),
+      new Cloud(620 * 2),
+      new Cloud(620 * 3)
+    ],
     [
       new BackgroundObject("assets/img/5_background/layers/air.png", -720, 0),
       new BackgroundObject(
