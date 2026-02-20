@@ -32,6 +32,8 @@ function registerAudio(audio) {
 function saveMute(muted) {
   try {
     localStorage.setItem("el_pollo_muted", muted ? "true" : "false");
+    const icon = muted ? "assets/icons/mute_btn.svg" : "assets/icons/unmute.svg";
+    localStorage.setItem("el_pollo_mute_icon", icon);
   } catch (e) {}
 }
 
@@ -147,8 +149,8 @@ function muteGame() {
   const muteBtn = document.getElementById("mute-btn");
   if (muteBtn) {
     muteBtn.src = isMuted
-      ? "assets/icons/unmute.svg"
-      : "assets/icons/mute_btn.svg";
+      ? "assets/icons/mute_btn.svg"
+      : "assets/icons/unmute.svg";
   }
   saveMute(isMuted);
 }
@@ -283,9 +285,12 @@ window.addEventListener("DOMContentLoaded", () => {
   isMuted = loadMute();
   const muteBtn = document.getElementById("mute-btn");
   if (muteBtn) {
-    muteBtn.src = isMuted
-      ? "assets/icons/unmute.svg"
-      : "assets/icons/mute_btn.svg";
+    const storedIcon = localStorage.getItem("el_pollo_mute_icon");
+    if (storedIcon) {
+      muteBtn.src = storedIcon;
+    } else {
+      muteBtn.src = isMuted ? "assets/icons/mute_btn.svg" : "assets/icons/unmute.svg";
+    }
   }
 
   for (let i = 0; i < allAudioElements.length; i++) {
