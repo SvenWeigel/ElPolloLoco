@@ -134,6 +134,7 @@ function hideStartScreen() {
   muteBtn.classList.remove("d-none");
   const footer = document.querySelector("footer");
   footer.classList.add("d-none");
+  setupInitialUI();
   init();
 }
 
@@ -231,8 +232,16 @@ function youLose() {
   }, 1000);
 }
 
-// Keyboard listeners moved to js/keyboard-input.js via `initKeyboardListeners()`
 
+
+/**
+ * Initialize `isMuted` and the mute button state from `localStorage`.
+ *
+ * Reads `el_pollo_muted` and `el_pollo_mute_icon` and applies the stored
+ * values to the global state and the DOM mute button.
+ *
+ * @returns {void}
+ */
 function initMuteFromStorage() {
   isMuted = loadMute();
   const muteBtn = document.getElementById("mute-btn");
@@ -246,6 +255,14 @@ function initMuteFromStorage() {
   }
 }
 
+/**
+ * Apply the current `isMuted` value to all registered audio elements.
+ *
+ * Ensures audio elements that were registered before the mute state was
+ * determined are updated to match the current global mute setting.
+ *
+ * @returns {void}
+ */
 function syncRegisteredAudioMute() {
   for (let i = 0; i < allAudioElements.length; i++) {
     const audio = allAudioElements[i];
@@ -255,10 +272,20 @@ function syncRegisteredAudioMute() {
 
 
 window.addEventListener("DOMContentLoaded", () => {
+  setupInitialUI();
+});
+
+/**
+ * Small DOM-dependent initialization used at startup and when entering the
+ * gameplay screen. Safe to call multiple times.
+ *
+ * @returns {void}
+ */
+function setupInitialUI() {
   initMuteFromStorage();
   syncRegisteredAudioMute();
   initTouchControls();
   if (typeof initKeyboardListeners === 'function') {
     initKeyboardListeners();
   }
-});
+}
