@@ -85,4 +85,45 @@ class DrawableObject {
       ctx.stroke();
     }
   }
+
+  /**
+   * Calculates the index level based on the current percentage value.
+   * Maps percentage ranges to index values from 0 to 5.
+   * 
+   * @returns {number} The index level:
+   *                   - 5 if percentage equals 100
+   *                   - 4 if percentage >= 80
+   *                   - 3 if percentage >= 60
+   *                   - 2 if percentage >= 40
+   *                   - 1 if percentage >= 20
+   *                   - 0 if percentage < 20
+   */
+  percentageIndex() {
+    if (this.percentage == 100) {
+      return 5;
+    } else if (this.percentage >= 80) {
+      return 4;
+    } else if (this.percentage >= 60) {
+      return 3;
+    } else if (this.percentage >= 40) {
+      return 2;
+    } else if (this.percentage >= 20) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  /**
+   * Selects and sets an image based on the given percentage value.
+   * 
+   * @param {number} percentage - The percentage value used to determine which image to display (0-100).
+   *                              This value is used to resolve the appropriate image index.
+   * @returns {void}
+   */
+  chooseImageIndexoFromPercentage(percentage) {
+    this.percentage = percentage;
+    let path = this.IMAGES[this.resolveImageIndex()];
+    this.img = this.imageCache[path];
+  }
 }
