@@ -32,7 +32,9 @@ function registerAudio(audio) {
 function saveMute(muted) {
   try {
     localStorage.setItem("el_pollo_muted", muted ? "true" : "false");
-    const icon = muted ? "assets/icons/mute_btn.svg" : "assets/icons/unmute.svg";
+    const icon = muted
+      ? "assets/icons/mute_btn.svg"
+      : "assets/icons/unmute.svg";
     localStorage.setItem("el_pollo_mute_icon", icon);
   } catch (e) {}
 }
@@ -229,59 +231,9 @@ function youLose() {
   }, 1000);
 }
 
-window.addEventListener("keydown", (e) => {
-  if (e.code == "ArrowRight") {
-    keyboard.RIGHT = true;
-  }
+// Keyboard listeners moved to js/keyboard-input.js via `initKeyboardListeners()`
 
-  if (e.code == "ArrowLeft") {
-    keyboard.LEFT = true;
-  }
-
-  if (e.code == "ArrowUp") {
-    keyboard.UP = true;
-  }
-
-  if (e.code == "ArrowDown") {
-    keyboard.DOWN = true;
-  }
-
-  if (e.code == "Space") {
-    keyboard.SPACE = true;
-  }
-
-  if (e.code == "KeyD") {
-    keyboard.D = true;
-  }
-});
-
-window.addEventListener("keyup", (e) => {
-  if (e.code == "ArrowRight") {
-    keyboard.RIGHT = false;
-  }
-
-  if (e.code == "ArrowLeft") {
-    keyboard.LEFT = false;
-  }
-
-  if (e.code == "ArrowUp") {
-    keyboard.UP = false;
-  }
-
-  if (e.code == "ArrowDown") {
-    keyboard.DOWN = false;
-  }
-
-  if (e.code == "Space") {
-    keyboard.SPACE = false;
-  }
-
-  if (e.code == "KeyD") {
-    keyboard.D = false;
-  }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
+function initMuteFromStorage() {
   isMuted = loadMute();
   const muteBtn = document.getElementById("mute-btn");
   if (muteBtn) {
@@ -292,48 +244,21 @@ window.addEventListener("DOMContentLoaded", () => {
       muteBtn.src = isMuted ? "assets/icons/mute_btn.svg" : "assets/icons/unmute.svg";
     }
   }
+}
 
+function syncRegisteredAudioMute() {
   for (let i = 0; i < allAudioElements.length; i++) {
     const audio = allAudioElements[i];
     if (audio) audio.muted = isMuted;
   }
-  document.getElementById("left-btn").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keyboard.LEFT = true;
-  });
+}
 
-  document.getElementById("left-btn").addEventListener("touchend", (e) => {
-    e.preventDefault();
-    keyboard.LEFT = false;
-  });
 
-  document.getElementById("right-btn").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keyboard.RIGHT = true;
-  });
-
-  document.getElementById("right-btn").addEventListener("touchend", (e) => {
-    e.preventDefault();
-    keyboard.RIGHT = false;
-  });
-
-  document.getElementById("jump-btn").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keyboard.SPACE = true;
-  });
-
-  document.getElementById("jump-btn").addEventListener("touchend", (e) => {
-    e.preventDefault();
-    keyboard.SPACE = false;
-  });
-
-  document.getElementById("throw-btn").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keyboard.D = true;
-  });
-
-  document.getElementById("throw-btn").addEventListener("touchend", (e) => {
-    e.preventDefault();
-    keyboard.D = false;
-  });
+window.addEventListener("DOMContentLoaded", () => {
+  initMuteFromStorage();
+  syncRegisteredAudioMute();
+  initTouchControls();
+  if (typeof initKeyboardListeners === 'function') {
+    initKeyboardListeners();
+  }
 });
