@@ -29,7 +29,7 @@ class CoinBar extends DrawableObject {
    * @param {number} percentage - Coin percentage (0-100).
    */
   setPercentage(percentage) {
-    return this.chooseImageIndexoFromPercentage(percentage);
+    return this.chooseImageIndexFromPercentage(percentage);
   }
 
   /**

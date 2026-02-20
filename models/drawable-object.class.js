@@ -121,7 +121,11 @@ class DrawableObject {
    *                              This value is used to resolve the appropriate image index.
    * @returns {void}
    */
-  chooseImageIndexoFromPercentage(percentage) {
+  /**
+   * Sets `percentage` and updates `img` using the resolved image index.
+   * @param {number} percentage
+   */
+  chooseImageIndexFromPercentage(percentage) {
     this.percentage = percentage;
     let path = this.IMAGES[this.resolveImageIndex()];
     this.img = this.imageCache[path];

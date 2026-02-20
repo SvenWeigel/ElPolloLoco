@@ -29,7 +29,7 @@ class BottleBar extends DrawableObject {
    * @param {number} percentage - Bottle fill percentage (0-100).
    */
   setPercentage(percentage) {
-    return this.chooseImageIndexoFromPercentage(percentage);
+    return this.chooseImageIndexFromPercentage(percentage);
   }
 
   /**

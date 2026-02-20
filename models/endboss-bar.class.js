@@ -29,7 +29,7 @@ class EndbossBar extends DrawableObject {
    * @param {number} percentage - Endboss health percentage (0-100).
    */
   setPercentage(percentage) {
-    return this.chooseImageIndexoFromPercentage(percentage);
+    return this.chooseImageIndexFromPercentage(percentage);
   }
 
   /**
