@@ -228,6 +228,10 @@ class World {
         this.character.y + 100,
       );
       this.throwableObjects.push(bottle);
+      if (this.character) {
+        this.character.idleStartTime = null;
+        this.character.currentImage = 0;
+      }
       this.bottleAmount--;
       const bottlePercent = Math.max(
         0,

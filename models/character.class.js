@@ -12,6 +12,7 @@ class Character extends MovableObject {
   walkAudio = new Audio("audio/walking_sound.mp3");
   jumpAudio = new Audio("audio/jump.mp3");
   hurtAudio = new Audio("audio/hurt.mp3");
+  longIdleAudio = new Audio("audio/snoring.mp3");
   gameOverAudio = new Audio("audio/gameover.mp3");
 
   offset = {
@@ -96,6 +97,7 @@ class Character extends MovableObject {
     registerAudio(this.walkAudio);
     registerAudio(this.jumpAudio);
     registerAudio(this.hurtAudio);
+    registerAudio(this.longIdleAudio);
     registerAudio(this.gameOverAudio);
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
@@ -238,6 +240,9 @@ class Character extends MovableObject {
     }
     if (Date.now() - this.idleStartTime >= 5000) {
       this.playAnimation(this.IMAGES_LONG_IDLE);
+      if (this.longIdleAudio.paused) {
+        this.longIdleAudio.play();
+      }
     } else {
       this.playAnimation(this.IMAGES_IDLE);
     }
