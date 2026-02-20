@@ -113,7 +113,6 @@ class World {
     if (this.hasWon || this.hasLost) {
       return;
     }
-
     if (this.character.isDead()) {
       this.hasLost = true;
       youLose();
@@ -156,10 +155,8 @@ class World {
       }
       return false;
     };
-
     if (processByType(Chicken)) return true;
     if (processByType(ChickenSmall)) return true;
-
     for (const item of colliding) {
       const handled = this.processEnemyCollision(item.enemy, item.index);
       if (handled) return true;
@@ -225,25 +222,26 @@ class World {
       Date.now() - this.lastThrowTime > this.throwCooldown &&
       this.bottleAmount > 0
     ) {
-      const spawnX = this.character.x + (this.character.otherDirection ? -50 : 50);
-      let bottle = new ThrowableObject(
-        spawnX,
-        this.character.y + 100,
-        this.character.otherDirection,
-      );
-      this.throwableObjects.push(bottle);
-      if (this.character) {
-        this.character.idleStartTime = null;
-        this.character.currentImage = 0;
-      }
-      this.bottleAmount--;
-      const bottlePercent = Math.max(
-        0,
-        Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)),
-      );
-      this.bottleBar.setPercentage(bottlePercent);
-      this.lastThrowTime = Date.now();
+      this.spawnThrowable();
     }
+  }
+
+  /**
+   * Spawns a throwable bottle and updates related state (inventory, UI, timestamps).
+   * Separated from `checkThrowableObjects()` to keep the input check small.
+   */
+  spawnThrowable() {
+    const spawnX = this.character.x + (this.character.otherDirection ? -50 : 50);
+    let bottle = new ThrowableObject(spawnX, this.character.y + 100, this.character.otherDirection);
+    this.throwableObjects.push(bottle);
+    if (this.character) {
+      this.character.idleStartTime = null;
+      this.character.currentImage = 0;
+    }
+    this.bottleAmount--;
+    const bottlePercent = Math.max(0, Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)));
+    this.bottleBar.setPercentage(bottlePercent);
+    this.lastThrowTime = Date.now();
   }
 
   /**
@@ -266,21 +264,23 @@ class World {
    */
   checkBottleCollisions() {
     this.level.colectables.forEach((colectable, index) => {
-      if (
-        colectable instanceof Bottle &&
-        this.character.isColliding(colectable)
-      ) {
-        this.level.colectables.splice(index, 1);
-        this.bottleAmount++;
-        if (this.bottleAmount > this.bottleMax)
-          this.bottleAmount = this.bottleMax;
-        const bottlePercent = Math.max(
-          0,
-          Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)),
-        );
-        this.bottleBar.setPercentage(bottlePercent);
+      if (colectable instanceof Bottle && this.character.isColliding(colectable)) {
+        this.handleBottlePickup(colectable, index);
       }
     });
+  }
+
+  /**
+   * Handles pickup of a bottle collectible: removes it, updates inventory and UI.
+   * @param {Bottle} colectable
+   * @param {number} index
+   */
+  handleBottlePickup(colectable, index) {
+    this.level.colectables.splice(index, 1);
+    this.bottleAmount++;
+    if (this.bottleAmount > this.bottleMax) this.bottleAmount = this.bottleMax;
+    const bottlePercent = Math.max(0, Math.min(100, Math.round((this.bottleAmount / this.bottleMax) * 100)));
+    this.bottleBar.setPercentage(bottlePercent);
   }
 
   /**
@@ -309,23 +309,35 @@ class World {
     const isChicken = enemy instanceof Chicken || enemy instanceof ChickenSmall;
     const isOnTop = this.isCharacterJumpingOnEnemy(enemy);
     if (isChicken && !enemy.isDead()) {
-      const enemyTop = enemy.y + enemy.offset.top;
       if (isOnTop) {
-        this.character.y =
-          enemyTop - this.character.height + this.character.offset.bottom;
-        this.character.speedY = 0;
-        this.lastCharacterY = this.character.y;
-        this.handleStomp(enemy, index);
-        return true;
+        return this.onStompEnemy(enemy, index);
       }
     }
-    if (
-      !isOnTop &&
-      !enemy.isDead() &&
-      Date.now() - this.lastHitTime > this.hitCooldown
-    ) {
-      this.handleCharacterHit();
+    if (!isOnTop && !enemy.isDead() && Date.now() - this.lastHitTime > this.hitCooldown) {
+      return this.onEnemyHitsCharacter(enemy);
     }
+    return false;
+  }
+
+  /**
+   * Handle when character stomps an enemy: reposition character, reset vertical speed and apply stomp.
+   * @returns {boolean} true indicating the collision was handled
+   */
+  onStompEnemy(enemy, index) {
+    const enemyTop = enemy.y + enemy.offset.top;
+    this.character.y = enemyTop - this.character.height + this.character.offset.bottom;
+    this.character.speedY = 0;
+    this.lastCharacterY = this.character.y;
+    this.handleStomp(enemy, index);
+    return true;
+  }
+
+  /**
+   * Handle when enemy hits the character (not from above): apply damage and return false.
+   * @returns {boolean} false to indicate collision not handled in the same way as a stomp
+   */
+  onEnemyHitsCharacter(enemy) {
+    this.handleCharacterHit();
     return false;
   }
 

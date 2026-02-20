@@ -116,11 +116,9 @@ class Character extends MovableObject {
     setStoppableInterval(() => {
       this.moveCharacter();
     }, 1000 / 60);
-
     setStoppableInterval(() => {
       this.playJumpAnimation();
     }, 1000 / 60);
-
     setStoppableInterval(() => {
       this.playCharacterAnimation();
     }, 1000 / 10);
@@ -131,34 +129,59 @@ class Character extends MovableObject {
    */
   moveCharacter() {
     let moved = false;
-
     if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-      this.moveRight();
-      moved = true;
-      this.otherDirection = false;
-    }
-    if (this.world.keyboard.LEFT && this.x > 0) {
-      this.moveLeft();
-      moved = true;
-      this.otherDirection = true;
-    }
-    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-      this.idleStartTime = null;
-      this.jump();
-      this.jumpAudio.play();
-    }
-    this.isMoving = moved;
+      moved = this.onRightPress() || moved;
+    }if (this.world.keyboard.LEFT && this.x > 0) {
+      moved = this.onLeftPress() || moved;
+    }if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+      this.onSpacePress();
+    }this.isMoving = moved;
     if (moved) {
-      this.idleStartTime = null;
-      if (this.walkAudio.paused) {
-        this.walkAudio.play();
-      }
+      this.onMoved();
     } else {
-      this.walkAudio.pause();
-      this.walkAudio.currentTime = 0;
-    }
+      this.onNotMoved();
+    }this.world.camera_x = -this.x + 100;
+  }
 
-    this.world.camera_x = -this.x + 100;
+  /*
+   * Called when RIGHT is pressed and movement is allowed.
+   * Returns true when movement occurred.
+   */
+  onRightPress() {
+    this.moveRight();
+    this.otherDirection = false;
+    return true;
+  }
+
+  /*
+   * Called when LEFT is pressed and movement is allowed.
+   * Returns true when movement occurred.
+   */
+  onLeftPress() {
+    this.moveLeft();
+    this.otherDirection = true;
+    return true;
+  }
+
+  /* Called when SPACE is pressed and a jump should occur. */
+  onSpacePress() {
+    this.idleStartTime = null;
+    this.jump();
+    this.jumpAudio.play();
+  }
+
+  /* Called when the character moved this frame. */
+  onMoved() {
+    this.idleStartTime = null;
+    if (this.walkAudio.paused) {
+      this.walkAudio.play();
+    }
+  }
+
+  /* Called when the character did not move this frame. */
+  onNotMoved() {
+    this.walkAudio.pause();
+    this.walkAudio.currentTime = 0;
   }
 
   /**
