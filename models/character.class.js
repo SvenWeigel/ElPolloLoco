@@ -143,12 +143,13 @@ class Character extends MovableObject {
       this.otherDirection = true;
     }
     if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+      this.idleStartTime = null;
       this.jump();
       this.jumpAudio.play();
     }
-
     this.isMoving = moved;
     if (moved) {
+      this.idleStartTime = null;
       if (this.walkAudio.paused) {
         this.walkAudio.play();
       }
