@@ -216,6 +216,9 @@ class Character extends MovableObject {
   playJumpingAnimation() {
     this.idleStartTime = null;
     this.playAnimation(this.IMAGES_JUMPING);
+    if (this.currentImage % this.IMAGES_JUMPING.length === 0) {
+      this.currentImage = 0;
+    }
   }
 
   /**
