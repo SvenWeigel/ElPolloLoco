@@ -19,6 +19,7 @@ class World {
   lastHitTime = 0;
   hitCooldown = 500;
   backgroundMusic = new Audio("audio/background_music.mp3");
+  bounceAudio = new Audio("audio/bounce.mp3");
   lastBounceTimes = {};
   lastCharacterY = 0;
   hasWon = false;
@@ -40,6 +41,7 @@ class World {
     this.backgroundMusic.loop = true;
     this.backgroundMusic.volume = 0.05;
     registerAudio(this.backgroundMusic);
+    registerAudio(this.bounceAudio);
     this.backgroundMusic.play();
     this.lastCharacterY = this.character.y;
   }
@@ -337,6 +339,7 @@ class World {
       Date.now() - this.lastBounceTimes[index] > 300
     ) {
       enemy.hit();
+      this.bounceAudio.play();
       this.character.speedY = 20;
       this.lastBounceTimes[index] = Date.now();
       this.updateEndbossBar(enemy);
