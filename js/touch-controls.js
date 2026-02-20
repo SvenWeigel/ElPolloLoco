@@ -1,3 +1,10 @@
+/**
+ * Attach touchstart/touchend handlers to a button that toggle a keyboard key.
+ *
+ * @param {HTMLElement} btn - The DOM element that receives touch events.
+ * @param {string} key - The keyboard state property to toggle (e.g. 'LEFT').
+ * @returns {void}
+ */
 function addTouchHandlers(btn, key) {
   btn.addEventListener("touchstart", (e) => {
     e.preventDefault();
@@ -9,6 +16,11 @@ function addTouchHandlers(btn, key) {
   });
 }
 
+/**
+ * Initialize on-screen touch controls by wiring touch handlers to buttons.
+ *
+ * @returns {void}
+ */
 function initTouchControls() {
   const leftBtn = document.getElementById("left-btn");
   if (leftBtn) addTouchHandlers(leftBtn, "LEFT");

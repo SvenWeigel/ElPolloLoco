@@ -1,3 +1,12 @@
+/**
+ * Initialize keyboard event listeners and update the shared `keyboard` state.
+ *
+ * Listens for `keydown` and `keyup` events and toggles properties on the
+ * global `keyboard` object used by the game loop (`LEFT`, `RIGHT`, `UP`,
+ * `DOWN`, `SPACE`, `D`).
+ *
+ * @returns {void}
+ */
 function initKeyboardListeners() {
   window.addEventListener("keydown", (e) => {
     if (e.code == "ArrowRight") keyboard.RIGHT = true;
